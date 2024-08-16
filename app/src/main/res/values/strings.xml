@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">KodeTest</string>
+    <string name="search_hint">Введи имя, тег, почту…</string>
+    <string name="description">placeholder</string>
+</resources>
