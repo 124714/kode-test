@@ -1,4 +1,4 @@
-package com.antoan.kodetest.ui.theme
+package com.antoan.kodetest.common.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
