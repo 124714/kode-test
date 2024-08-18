@@ -12,5 +12,6 @@ enum class Department {
   PR,
   BACKEND,
   SUPPORT,
-  ANALYTICS
+  ANALYTICS,
+  UNKNOWN
 }

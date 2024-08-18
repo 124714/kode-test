@@ -37,6 +37,12 @@ android {
   buildFeatures {
     compose = true
   }
+
+  testOptions {
+    unitTests {
+      isIncludeAndroidResources = true
+    }
+  }
   composeOptions {
     kotlinCompilerExtensionVersion = "1.5.1"
   }
@@ -64,27 +70,37 @@ dependencies {
   implementation(libs.androidx.lifecycle.viewmodel)
   implementation(libs.androidx.lifecycle)
 
-  // Retrofit
-  implementation ("com.squareup.retrofit2:retrofit:2.11.0")
-  implementation ("com.squareup.okhttp3:okhttp:4.12.0")
-
-  // Moshi
-  implementation("com.squareup.moshi:moshi:1.13.0")
+  // Network:[Retrofit, Moshi, OkHttp, MockWebServer]
+  implementation("com.squareup.retrofit2:retrofit:2.11.0")
   implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+  implementation("com.squareup.okhttp3:okhttp:4.12.0")
+  implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+  implementation("com.squareup.moshi:moshi:1.13.0")
+
   ksp("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
+
+  testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+  androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
   //
   implementation(libs.androidx.compose.foundation)
   implementation(libs.androidx.material.icons)
 
-  // Koin
-  implementation(libs.koin.androidx.compose)
-
+  // DI:[Hilt]
+//  implementation(libs.koin.androidx.compose)
+  implementation("com.google.dagger:hilt-android:2.51.1")
+  ksp("com.google.dagger:hilt-compiler:2.51.1")
 
   // Coil
   implementation(libs.coil.compose)
 
 
+  // Testing:[androidx.test, Robolectric]
+  implementation(libs.androidx.monitor)
+  testImplementation("org.robolectric:robolectric:4.13")
+  testImplementation ("com.google.truth:truth:1.4.2")
+
+  // Testing:[Default]
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

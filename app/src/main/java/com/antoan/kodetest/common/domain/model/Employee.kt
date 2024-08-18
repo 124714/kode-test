@@ -1,6 +1,6 @@
 package com.antoan.kodetest.common.domain.model
 
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 data class Employee(
   val id: String,
@@ -9,6 +9,6 @@ data class Employee(
   val lastName: String,
   val position: String,
   val department: Department,
-  val birthday: LocalDateTime,
+  val birthday: LocalDate,
   val phone: String
 )

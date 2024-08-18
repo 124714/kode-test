@@ -13,6 +13,7 @@ coil = "2.7.0"
 appcompat = "1.7.0"
 material = "1.12.0"
 timber = "5.0.1"
+monitor = "1.7.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 
 # Timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber"}
+
+# Test
+androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
