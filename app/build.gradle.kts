@@ -94,6 +94,11 @@ dependencies {
   // Coil
   implementation(libs.coil.compose)
 
+  // Room
+  val room = "2.6.1"
+  implementation("androidx.room:room-runtime:$room")
+  implementation("androidx.room:room-ktx:$room")
+  ksp("androidx.room:room-compiler:$room")
 
   // Testing:[androidx.test, Robolectric]
   implementation(libs.androidx.monitor)
