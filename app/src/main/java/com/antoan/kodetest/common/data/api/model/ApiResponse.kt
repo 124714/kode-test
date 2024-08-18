@@ -7,5 +7,7 @@ import com.squareup.moshi.JsonClass
 data class ApiResponse(
   @Json(name = "items")
   val items: List<ApiEmployee>?
-)
+) {
+  val isSuccess = !items.isNullOrEmpty()
+}
  

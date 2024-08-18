@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface EmployeeDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertEmployee(employees: List<CachedEmployee>)
+  fun insertEmployees(employees: List<CachedEmployee>)
 
   @Query("SELECT * FROM employee")
   fun getAllEmployees(): Flow<List<CachedEmployee>>
