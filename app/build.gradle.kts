@@ -15,9 +15,15 @@ android {
     versionCode = 1
     versionName = "1.0"
 
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner = "com.antoan.kodetest.HiltTestRunner"
     vectorDrawables {
       useSupportLibrary = true
+    }
+  }
+
+  sourceSets {
+    getByName("androidTest") {
+      assets.srcDirs("src/debug/assets")
     }
   }
 
@@ -51,6 +57,7 @@ android {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
   }
+
 }
 
 dependencies {
@@ -87,9 +94,12 @@ dependencies {
   implementation(libs.androidx.material.icons)
 
   // DI:[Hilt]
-//  implementation(libs.koin.androidx.compose)
   implementation("com.google.dagger:hilt-android:2.51.1")
   ksp("com.google.dagger:hilt-compiler:2.51.1")
+
+  androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+  kspAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
+  //  implementation(libs.koin.androidx.compose)
 
   // Coil
   implementation(libs.coil.compose)
@@ -103,7 +113,9 @@ dependencies {
   // Testing:[androidx.test, Robolectric]
   implementation(libs.androidx.monitor)
   testImplementation("org.robolectric:robolectric:4.13")
-  testImplementation ("com.google.truth:truth:1.4.2")
+  testImplementation("com.google.truth:truth:1.4.2")
+  androidTestImplementation("com.google.truth:truth:1.4.2")
+//  androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
 
   // Testing:[Default]
   testImplementation(libs.junit)

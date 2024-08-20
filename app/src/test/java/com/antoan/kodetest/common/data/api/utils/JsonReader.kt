@@ -7,12 +7,15 @@ import java.io.InputStream
 
 object JsonReader {
   fun getJson(path: String): String {
+    println("!!!!!GetJson!!!!")
     return try {
       val context = InstrumentationRegistry.getInstrumentation().context
       val jsonStream: InputStream = context.assets.open(path)
-      String(jsonStream.readBytes())
+      val testing = String(jsonStream.readBytes())
+      println(testing)
+      testing
     } catch (exception: IOException) {
-      Log.e("JSON_READER", "Error reading network response json asset")
+      Log.e("FakeServer2", "Error reading network response json asset")
       throw exception
     }
   }

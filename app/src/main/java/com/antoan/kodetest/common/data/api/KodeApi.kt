@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface KodeApi {
   @GET(ApiConstants.USERS_ENDPOINT)
-  fun getAllUsers(): ApiResponse
+  suspend fun getAllUsers(): ApiResponse
 }

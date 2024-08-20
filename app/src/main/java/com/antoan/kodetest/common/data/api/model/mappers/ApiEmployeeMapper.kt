@@ -7,8 +7,9 @@ import com.antoan.kodetest.common.domain.model.Department
 import com.antoan.kodetest.common.domain.model.Employee
 import com.antoan.kodetest.common.utils.DateTimeUtils
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class ApiEmployeeMapper : ApiMapper<ApiEmployee, Employee> {
+class ApiEmployeeMapper @Inject constructor() : ApiMapper<ApiEmployee, Employee> {
 
   @RequiresApi(Build.VERSION_CODES.O)
   override fun mapToDomain(apiEntity: ApiEmployee): Employee {

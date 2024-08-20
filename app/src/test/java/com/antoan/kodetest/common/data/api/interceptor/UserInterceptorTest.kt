@@ -73,7 +73,9 @@ class UserInterceptorTest {
   private fun getDispatcher() = object: Dispatcher() {
     override fun dispatch(request: RecordedRequest): MockResponse {
       return when(request.path) {
-        usersEndpointPath -> MockResponse().setResponseCode(200).setBody(JsonReader.getJson("users.json"))
+        usersEndpointPath -> MockResponse()
+          .setResponseCode(200)
+          .setBody(JsonReader.getJson("users.json"))
         else -> MockResponse().setResponseCode(404)
       }
     }
