@@ -115,7 +115,7 @@ dependencies {
   testImplementation("org.robolectric:robolectric:4.13")
   testImplementation("com.google.truth:truth:1.4.2")
   androidTestImplementation("com.google.truth:truth:1.4.2")
-//  androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
+  androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
 
   // Testing:[Default]
   testImplementation(libs.junit)
