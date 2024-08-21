@@ -9,7 +9,7 @@ import com.antoan.kodetest.common.data.api.utils.FakeServer
 import com.antoan.kodetest.common.data.cache.EmployeeDatabase
 import com.antoan.kodetest.common.data.cache.RoomCache
 import com.antoan.kodetest.common.data.cache.model.Cache
-import com.antoan.kodetest.common.di.CacheModule
+import com.antoan.kodetest.common.data.di.CacheModule
 import com.antoan.kodetest.common.domain.repository.EmployeeRepository
 import com.google.common.truth.Truth.assertThat
 import dagger.Module
@@ -119,7 +119,7 @@ class KodeEmployeeRepositoryTest {
     repository.storeEmployees(listOf(firstEmployee))
 
     // Then
-    val employee = repository.getEmployees().first()
+    val employee = repository.getAllEmployees().first()
 //    assertThat(employee.first().id).isEqualTo(expectedEmployeeId)
     assertEquals(employee.first().id, expectedEmployeeId)
   }

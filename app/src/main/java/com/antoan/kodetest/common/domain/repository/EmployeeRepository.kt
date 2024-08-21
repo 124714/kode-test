@@ -4,7 +4,7 @@ import com.antoan.kodetest.common.domain.model.Employee
 import kotlinx.coroutines.flow.Flow
 
 interface EmployeeRepository {
-  fun getEmployees(): Flow<List<Employee>>
+  fun getAllEmployees(): Flow<List<Employee>>
   suspend fun requestEmployees(): List<Employee>
   fun storeEmployees(employees: List<Employee>)
 }

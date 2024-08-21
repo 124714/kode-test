@@ -25,9 +25,9 @@ class KodeEmployeeRepository @Inject constructor(
 ) : EmployeeRepository {
 
 
-  override fun getEmployees(): Flow<List<Employee>> {
+  override fun getAllEmployees(): Flow<List<Employee>> {
     return cache
-      .getEmployees()
+      .getAllEmployees()
       .distinctUntilChanged()
       .map { employeeList -> employeeList.map(CachedEmployee::toDomain) }
   }

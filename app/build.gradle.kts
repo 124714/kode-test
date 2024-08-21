@@ -1,7 +1,8 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.jetbrains.kotlin.android)
-  id("com.google.devtools.ksp") version "1.9.0-1.0.12"
+  id("com.google.devtools.ksp")
+  id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -50,7 +51,7 @@ android {
     }
   }
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.1"
+    kotlinCompilerExtensionVersion = "1.5.2"
   }
   packaging {
     resources {
@@ -77,6 +78,10 @@ dependencies {
   implementation(libs.androidx.lifecycle.viewmodel)
   implementation(libs.androidx.lifecycle)
 
+  // Navigation
+  implementation("androidx.navigation:navigation-compose:2.7.7")
+  implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
   // Network:[Retrofit, Moshi, OkHttp, MockWebServer]
   implementation("com.squareup.retrofit2:retrofit:2.11.0")
   implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
@@ -96,6 +101,7 @@ dependencies {
   // DI:[Hilt]
   implementation("com.google.dagger:hilt-android:2.51.1")
   ksp("com.google.dagger:hilt-compiler:2.51.1")
+
 
   androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
   kspAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")

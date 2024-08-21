@@ -10,5 +10,6 @@ data class Employee(
   val position: String,
   val department: Department,
   val birthday: LocalDate,
+  val userTag: String,
   val phone: String
 )

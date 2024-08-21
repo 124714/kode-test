@@ -1,4 +1,4 @@
-package com.antoan.kodetest.common.di
+package com.antoan.kodetest.common.data.di
 
 import com.antoan.kodetest.common.data.api.ApiConstants
 import com.antoan.kodetest.common.data.api.KodeApi

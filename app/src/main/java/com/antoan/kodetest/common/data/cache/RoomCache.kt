@@ -9,7 +9,7 @@ import javax.inject.Inject
 class RoomCache @Inject constructor(
   private val employeeDao: EmployeeDao
 ): Cache {
-  override fun getEmployees(): Flow<List<CachedEmployee>> {
+  override fun getAllEmployees(): Flow<List<CachedEmployee>> {
     return employeeDao.getAllEmployees()
   }
 

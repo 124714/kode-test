@@ -28,6 +28,8 @@ data class CachedEmployee (
   val birthday: String,
   @ColumnInfo(name = "phone")
   val phone: String,
+  @ColumnInfo(name = "user_tag")
+  val userTag: String
 ) {
   companion object {
     fun fromDomain(domainModel: Employee): CachedEmployee {
@@ -40,7 +42,8 @@ data class CachedEmployee (
         position = domainModel.position,
         department = domainModel.department.toString(),
         birthday = domainModel.birthday.toString(),
-        phone = domainModel.phone
+        phone = domainModel.phone,
+        userTag = domainModel.userTag
       )
     }
   }
@@ -55,7 +58,8 @@ data class CachedEmployee (
       position = position,
       department = Department.valueOf(department),
       birthday = DateTimeUtils.parse(birthday),
-      phone = phone
+      phone = phone,
+      userTag = userTag,
     )
   }
 }

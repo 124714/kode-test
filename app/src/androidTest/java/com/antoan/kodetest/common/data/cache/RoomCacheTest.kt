@@ -41,7 +41,7 @@ class RoomCacheTest {
 
     cache.storeEmployees(employeeEntities)
 
-    val employeeEntitiesFromDb = cache.getEmployees().first()
+    val employeeEntitiesFromDb = cache.getAllEmployees().first()
 
     assertEquals(employeeEntities.size, employeeEntitiesFromDb.size)
   }
@@ -59,5 +59,6 @@ private fun testCachedEmployee(
     position = "****",
     department = "****",
     birthday = "****",
-    phone = "****"
+    phone = "****",
+    userTag = "****"
   )

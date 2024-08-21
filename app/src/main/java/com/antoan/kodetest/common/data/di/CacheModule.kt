@@ -1,4 +1,4 @@
-package com.antoan.kodetest.common.di
+package com.antoan.kodetest.common.data.di
 
 import android.content.Context
 import androidx.room.Room

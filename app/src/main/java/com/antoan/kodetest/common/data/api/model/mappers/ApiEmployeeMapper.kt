@@ -22,6 +22,7 @@ class ApiEmployeeMapper @Inject constructor() : ApiMapper<ApiEmployee, Employee>
       department = parseDepartment(apiEntity.department),
       birthday = DateTimeUtils.parse(apiEntity.birthday.orEmpty()),
       phone = apiEntity.phone.orEmpty(),
+      userTag = apiEntity.userTag.orEmpty()
     )
   }
 
