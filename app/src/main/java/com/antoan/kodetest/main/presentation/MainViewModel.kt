@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antoan.kodetest.common.domain.model.NetworkException
 import com.antoan.kodetest.common.domain.model.NetworkUnavailableException
+import com.antoan.kodetest.common.presentation.Event
 import com.antoan.kodetest.common.presentation.model.UIEmployee
 import com.antoan.kodetest.common.presentation.model.mappers.UiEmployeeMapper
+import com.antoan.kodetest.common.utils.createExceptionHandler
 import com.antoan.kodetest.main.domain.GetEmployees
 import com.antoan.kodetest.main.domain.RequestInitialEmployeeList
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +35,7 @@ class MainViewModel @Inject constructor(
     viewModelScope.launch {
       getEmployees()
         .map { employees -> employees.map { uiEmployeeMapper.mapToView(it) } }
-        .catch { onFailure(it) }
+        .catch { Log.d("MainVM", "!!!EXCEPTION"); onFailure(it) }
         .collect { onNewEmployeeList(it) }
     }
   }
@@ -47,10 +49,15 @@ class MainViewModel @Inject constructor(
 
   private fun onFailure(failure: Throwable) {
     when (failure) {
-      is NetworkException,
-      is NetworkUnavailableException -> {
-
+      is NetworkException, is NetworkUnavailableException -> {
+        _uiState.update { oldState ->
+          oldState.copy(
+            failure = Event(failure),
+            isLoading = false
+          )
+        }
       }
+
       else -> {
         Log.d("MainVM", "Exception!!!")
       }
@@ -59,8 +66,7 @@ class MainViewModel @Inject constructor(
 
   private fun onNewEmployeeList(employees: List<UIEmployee>) {
     val updatedEmployeeSet = (uiState.value.employees + employees).toSet()
-    Log.d("MainVM", updatedEmployeeSet.joinToString("\n"))
-    _uiState.update {oldState ->
+    _uiState.update { oldState ->
       oldState.copy(
         isLoading = false,
         employees = updatedEmployeeSet.toList()
@@ -69,8 +75,12 @@ class MainViewModel @Inject constructor(
   }
 
   private fun loadAllEmployees() {
+    val errorMessage = "Failed to fetch employees"
+    val exceptionHandler = viewModelScope
+      .createExceptionHandler(errorMessage) { onFailure(it) }
+
     if (uiState.value.employees.isEmpty()) {
-      viewModelScope.launch {
+      viewModelScope.launch(exceptionHandler) {
         requestInitialEmployeeList.invoke()
       }
     }

@@ -10,6 +10,7 @@ class RequestInitialEmployeeList @Inject constructor(
 ) {
   suspend fun invoke() = withContext(Dispatchers.IO) {
     val employees = employeeRepository.requestEmployees()
+
     employeeRepository.storeEmployees(employees)
   }
 }

@@ -1,6 +1,5 @@
 package com.antoan.kodetest.main.presentation
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -9,30 +8,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.antoan.kodetest.R
 import com.antoan.kodetest.common.presentation.model.UIEmployee
-import com.antoan.kodetest.common.presentation.model.fakeUIEmployeeList
-import com.antoan.kodetest.common.presentation.theme.KodeTestTheme
 import com.antoan.kodetest.main.presentation.components.EmployeeCard
 import com.antoan.kodetest.main.presentation.components.SearchToolbar
+import kotlinx.coroutines.launch
 
 @Composable
 fun EmployeesRoute(
@@ -63,8 +60,13 @@ fun MainScreen(
   uiState: MainViewState
 ) {
 
-  Log.d("MainScreen", uiState.employees.joinToString("\n"))
+  val scope = rememberCoroutineScope()
+  val snackbarHostState = remember { SnackbarHostState() }
+
   Scaffold(
+    snackbarHost = {
+      SnackbarHost(hostState = snackbarHostState)
+    },
     modifier = modifier,
     topBar = {
       SearchToolbar(searchQuery = "", onSearchQueryChanged = {}, onCancelClick = { /*TODO*/ })
@@ -74,17 +76,24 @@ fun MainScreen(
       state = uiState,
       onEmployeeClick = {},
       onFilterClick = {},
+      onError = {
+        scope.launch {
+          it?.let { t ->
+            snackbarHostState.showSnackbar(t.message!!)
+          }
+        }
+      },
       pages = pages,
       modifier = Modifier.padding(top = contentPadding.calculateTopPadding())
     )
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DepartmentPage(
   onEmployeeClick: (UIEmployee) -> Unit,
   onFilterClick: (String) -> Unit,
+  onError: (Throwable?) -> Unit,
   state: MainViewState,
   pages: Array<EmployeePage>,
   modifier: Modifier = Modifier
@@ -114,7 +123,27 @@ fun DepartmentPage(
       modifier = Modifier.fillMaxSize(),
       contentAlignment = Alignment.Center
     ) {
-      if (state.isLoading) {
+      when {
+        state.failure != null -> {
+          onError(state.failure.getContentIfNotHandled())
+        }
+
+        state.isLoading -> {
+          CircularProgressIndicator()
+        }
+
+        else -> {
+          LazyColumn(
+            modifier = Modifier.fillMaxSize()
+          ) {
+            items(state.employees) { employee ->
+              EmployeeCard(employee = employee)
+            }
+          }
+        }
+      }
+
+      /*if (state.isLoading) {
         CircularProgressIndicator()
       } else {
         LazyColumn(
@@ -124,7 +153,7 @@ fun DepartmentPage(
             EmployeeCard(employee = employee)
           }
         }
-      }
+      }*/
     }
   }
 }
