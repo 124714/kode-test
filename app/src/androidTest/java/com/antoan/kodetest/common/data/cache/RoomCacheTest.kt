@@ -1,6 +1,7 @@
 package com.antoan.kodetest.common.data.cache
 
 import android.content.Context
+import android.icu.text.Transliterator.Position
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.antoan.kodetest.common.data.cache.model.Cache
@@ -33,10 +34,10 @@ class RoomCacheTest {
   fun closeDb() = db.close()
 
   @Test
-  fun roomCache_storeEmployeesAndGetEmployees() = runTest {
+  fun roomCache_storeEmployeesAndGetEmployees_success() = runTest {
     val employeeEntities = listOf(
-      testCachedEmployee("1", "1"),
-      testCachedEmployee("2", "2"),
+      testCachedEmployee("1", "Joshua Bloh"),
+      testCachedEmployee("2", "Robert Martin"),
     )
 
     cache.storeEmployees(employeeEntities)
@@ -45,18 +46,23 @@ class RoomCacheTest {
 
     assertEquals(employeeEntities.size, employeeEntitiesFromDb.size)
   }
+
+  @Test fun roomCache_getEmployeesByDepartment_success() {
+
+  }
 }
 
 private fun testCachedEmployee(
-  id: String = "0",
-  name: String
+  id: String,
+  name: String,
+  position: String = ""
 ) =
   CachedEmployee(
     employeeId = id,
     firstName = name,
     avatarUrl = "http://fakeAvatar.com",
     lastName = "****",
-    position = "****",
+    position = position,
     department = "****",
     birthday = "****",
     phone = "****",

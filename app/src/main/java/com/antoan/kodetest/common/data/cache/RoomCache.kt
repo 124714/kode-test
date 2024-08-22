@@ -13,7 +13,7 @@ class RoomCache @Inject constructor(
     return employeeDao.getAllEmployees()
   }
 
-  override fun storeEmployees(employees: List<CachedEmployee>) {
+  override suspend fun storeEmployees(employees: List<CachedEmployee>) {
     employeeDao.insertEmployees(employees)
   }
 }

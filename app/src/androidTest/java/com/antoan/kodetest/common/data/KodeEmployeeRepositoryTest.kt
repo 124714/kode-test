@@ -37,14 +37,13 @@ class KodeEmployeeRepositoryTest {
   private val fakeServer = FakeServer()
   private lateinit var repository: EmployeeRepository
   private lateinit var api: KodeApi
+  private lateinit var cache: Cache
 
   @get:Rule
   val hiltRule = HiltAndroidRule(this)
 
   @get:Rule
   val instantTaskExecutorRule = InstantTaskExecutorRule()
-
-  lateinit var cache: Cache
 
   @Inject
   lateinit var database: EmployeeDatabase
@@ -54,18 +53,6 @@ class KodeEmployeeRepositoryTest {
 
   @Inject
   lateinit var apiEmployeeMapper: ApiEmployeeMapper
-
-  @Module
-  @InstallIn(SingletonComponent::class)
-  object TestCacheModule {
-    @Provides
-    fun provideRoomDatabase(): EmployeeDatabase {
-      return Room.inMemoryDatabaseBuilder(
-        InstrumentationRegistry.getInstrumentation().context,
-        EmployeeDatabase::class.java
-      ).allowMainThreadQueries().build()
-    }
-  }
 
   @Before
   fun setup() {

@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface Cache {
   fun getAllEmployees(): Flow<List<CachedEmployee>>
-  fun storeEmployees(employees: List<CachedEmployee>)
+  suspend fun storeEmployees(employees: List<CachedEmployee>)
 }

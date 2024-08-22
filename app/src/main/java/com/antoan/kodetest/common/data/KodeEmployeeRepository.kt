@@ -43,7 +43,7 @@ class KodeEmployeeRepository @Inject constructor(
     }
   }
 
-  override fun storeEmployees(employees: List<Employee>) {
+  override suspend fun storeEmployees(employees: List<Employee>) {
     cache.storeEmployees(
         employees.map(CachedEmployee::fromDomain)
       )

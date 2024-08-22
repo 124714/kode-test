@@ -71,7 +71,6 @@ class MainViewModel @Inject constructor(
   }
 
   private fun loadAllEmployees() {
-    Log.d("MainVM", "loadAllEmployees(): ${uiState.value}")
     _uiState.update {
       it.copy(failure = null)
     }

@@ -30,22 +30,22 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
-androidx-material-icons = {group = "androidx.compose.material", name = "material-icons-extended"}
-androidx-compose-foundation = {group = "androidx.compose.foundation", name = "foundation"}
+androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 
 # Lifecycle
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose" }
-androidx-lifecycle = {group = "androidx.lifecycle", name = "lifecycle-runtime-compose" }
+androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose" }
 
 # Koin
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
 # Coil
-coil-compose = {group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 
 # Timber
-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber"}
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # Test
 androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
