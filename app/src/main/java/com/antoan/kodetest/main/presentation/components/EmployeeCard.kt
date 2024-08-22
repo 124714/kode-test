@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.antoan.kodetest.common.presentation.model.UIEmployee
 import com.antoan.kodetest.common.presentation.model.fakeUIEmployee
-import com.antoan.kodetest.temp.Employee
-import java.time.LocalDate
 
 
 @Composable

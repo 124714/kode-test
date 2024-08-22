@@ -35,7 +35,7 @@ class MainViewModel @Inject constructor(
     viewModelScope.launch {
       getEmployees()
         .map { employees -> employees.map { uiEmployeeMapper.mapToView(it) } }
-        .catch { Log.d("MainVM", "!!!EXCEPTION"); onFailure(it) }
+        .catch { onFailure(it) }
         .collect { onNewEmployeeList(it) }
     }
   }
@@ -57,10 +57,6 @@ class MainViewModel @Inject constructor(
           )
         }
       }
-
-      else -> {
-        Log.d("MainVM", "Exception!!!")
-      }
     }
   }
 
@@ -75,6 +71,10 @@ class MainViewModel @Inject constructor(
   }
 
   private fun loadAllEmployees() {
+    Log.d("MainVM", "loadAllEmployees(): ${uiState.value}")
+    _uiState.update {
+      it.copy(failure = null)
+    }
     val errorMessage = "Failed to fetch employees"
     val exceptionHandler = viewModelScope
       .createExceptionHandler(errorMessage) { onFailure(it) }

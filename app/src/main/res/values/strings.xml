@@ -16,4 +16,8 @@
     <string name="backend_dep">Backend</string>
     <string name="support_dep">Техподдержка</string>
     <string name="analytics_dep">Аналитика</string>
+    
+    <string name="error_title">Какой-то сверхразум все сломал</string>
+    <string name="error_subtitle">Постараемся быстро починить</string>
+    <string name="error_button_text">Попробовать снова</string>
 </resources>
