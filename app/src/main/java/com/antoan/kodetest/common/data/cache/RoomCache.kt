@@ -16,4 +16,8 @@ class RoomCache @Inject constructor(
   override suspend fun storeEmployees(employees: List<CachedEmployee>) {
     employeeDao.insertEmployees(employees)
   }
+
+  override fun getEmployeesByDepartment(department: String): Flow<List<CachedEmployee>> {
+    return employeeDao.getEmployeesByDepartment(department)
+  }
 }

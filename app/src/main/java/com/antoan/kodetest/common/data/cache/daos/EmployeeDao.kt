@@ -16,4 +16,7 @@ interface EmployeeDao {
   @Query("SELECT * FROM employee")
   fun getAllEmployees(): Flow<List<CachedEmployee>>
 
+  @Query("SELECT * FROM employee WHERE department = :department")
+  fun getEmployeesByDepartment(department: String): Flow<List<CachedEmployee>>
+
 }
