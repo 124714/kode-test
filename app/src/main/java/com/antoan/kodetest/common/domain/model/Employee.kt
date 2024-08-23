@@ -12,4 +12,6 @@ data class Employee(
   val birthday: LocalDate,
   val userTag: String,
   val phone: String
-)
+) {
+  val fullName = "$firstName $lastName"
+}

@@ -11,6 +11,7 @@ import com.antoan.kodetest.common.utils.createExceptionHandler
 import com.antoan.kodetest.main.domain.GetEmployeeByDepartment
 import com.antoan.kodetest.main.domain.GetEmployees
 import com.antoan.kodetest.main.domain.RequestInitialEmployeeList
+import com.antoan.kodetest.main.domain.model.SortParameters
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,9 +33,13 @@ class MainViewModel @Inject constructor(
   private val _uiState = MutableStateFlow(MainViewState())
   val uiState: StateFlow<MainViewState> = _uiState.asStateFlow()
 
+  /*private val query = MutableStateFlow("")*/
+  private val departmentState = MutableStateFlow("ALL")
+  /*private val order = MutableStateFlow(SortParameters.DEFAULT)*/
+
   init {
     viewModelScope.launch {
-      getEmployees()
+      getEmployees(departmentState)
         .map { employees -> employees.map { uiEmployeeMapper.mapToView(it) } }
         .catch { onFailure(it) }
         .collect { onNewEmployeeList(it) }
@@ -44,8 +49,13 @@ class MainViewModel @Inject constructor(
   fun onEvent(event: MainEvent) {
     when (event) {
       MainEvent.RequestInitialEmployeesList -> loadAllEmployees()
-      is MainEvent.DepartmentChanged -> updateEmployeesWithFilter(event.department)
+      is MainEvent.DepartmentChanged -> updateEmployeesDepartment(event.department)
+      is MainEvent.SortOrderChanged -> updateSortOrder(event.filterParameters)
     }
+  }
+
+  private fun updateSortOrder(filterParameters: SortParameters) {
+    // TODO
   }
 
   private fun onFailure(failure: Throwable) {
@@ -62,28 +72,17 @@ class MainViewModel @Inject constructor(
   }
 
   private fun onNewEmployeeList(employees: List<UIEmployee>) {
-    val updatedEmployeeSet = (uiState.value.employees + employees).toSet()
+//    val updatedEmployeeSet = (uiState.value.employees + employees).toSet()
     _uiState.update { oldState ->
       oldState.copy(
         isLoading = false,
-        employees = updatedEmployeeSet.toList()
+        employees = /*updatedEmployeeSet.toList()*/ employees
       )
     }
   }
 
-  private fun updateEmployeesWithFilter(department: String) {
-    viewModelScope.launch {
-      getEmployeeByDepartment(department)
-        .map { employees -> employees.map { uiEmployeeMapper.mapToView(it) } }
-        .catch { onFailure(it) }
-        .collect { newEmployeeList ->
-          _uiState.update { oldState ->
-            oldState.copy(
-              employees = newEmployeeList
-            )
-          }
-        }
-    }
+  private fun updateEmployeesDepartment(department: String) {
+    departmentState.value = department
   }
 
   private fun loadAllEmployees() {

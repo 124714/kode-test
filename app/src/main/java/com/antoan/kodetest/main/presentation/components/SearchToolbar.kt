@@ -52,6 +52,7 @@ fun SearchToolbar(
   searchQuery: String,
   onSearchQueryChanged: (String) -> Unit,
   onCancelClick: () -> Unit,
+  onFilterClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
 
@@ -107,6 +108,7 @@ private fun SearchTextField(
 
   val onSearchExplicitlyTriggered = {
     keyboardController?.hide()
+    onSearchQueryChanged(searchQuery)
   }
 
   TextField(
@@ -193,6 +195,8 @@ fun SearchToolbarPreview() {
     SearchToolbar(
       searchQuery = "",
       onSearchQueryChanged = {},
-      onCancelClick = { /*TODO*/ })
+      onCancelClick = {},
+      onFilterClick = {}
+    )
   }
 }

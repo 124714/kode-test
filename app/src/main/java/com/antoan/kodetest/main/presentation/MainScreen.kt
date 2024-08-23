@@ -15,8 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,15 +78,16 @@ fun MainScreen(
       topBar = {
         SearchToolbar(
           searchQuery = "",
-          onSearchQueryChanged = {},
-          onCancelClick = { /*TODO*/ }
+          onSearchQueryChanged = {/*TODO*/ },
+          onCancelClick = { /*TODO*/ },
+          onFilterClick = { /*TODO*/ }
         )
       }
     ) { contentPadding ->
       DepartmentPage(
         state = uiState,
         onEmployeeClick = {},
-        onFilterClick = onDepartmentChanged,
+        onDepartmentChange = onDepartmentChanged,
         pages = pages,
         modifier = Modifier.padding(top = contentPadding.calculateTopPadding())
       )
@@ -100,7 +98,7 @@ fun MainScreen(
 @Composable
 fun DepartmentPage(
   onEmployeeClick: (UIEmployee) -> Unit,
-  onFilterClick: (String) -> Unit,
+  onDepartmentChange: (department: String) -> Unit,
   state: MainViewState,
   pages: Array<EmployeePage>,
   modifier: Modifier = Modifier
@@ -109,7 +107,7 @@ fun DepartmentPage(
 
   val onPageChanged = { index: Int ->
     currentPageIndex = index
-    onFilterClick(pages[index].toString())
+    onDepartmentChange(pages[index].toString())
   }
 
   Column(modifier) {
@@ -134,6 +132,7 @@ fun DepartmentPage(
         state.isLoading -> {
           CircularProgressIndicator()
         }
+
         else -> {
           LazyColumn(
             modifier = Modifier.fillMaxSize()

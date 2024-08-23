@@ -13,6 +13,5 @@ class GetEmployeeByDepartment @Inject constructor(
   } else {
     employeeRepository.getEmployeeByDepartment(department)
   }
-
 }
 
