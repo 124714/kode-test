@@ -1,6 +1,5 @@
 package com.antoan.kodetest.main.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antoan.kodetest.common.domain.model.NetworkException
@@ -9,6 +8,7 @@ import com.antoan.kodetest.common.presentation.Event
 import com.antoan.kodetest.common.presentation.model.UIEmployee
 import com.antoan.kodetest.common.presentation.model.mappers.UiEmployeeMapper
 import com.antoan.kodetest.common.utils.createExceptionHandler
+import com.antoan.kodetest.main.domain.GetEmployeeByDepartment
 import com.antoan.kodetest.main.domain.GetEmployees
 import com.antoan.kodetest.main.domain.RequestInitialEmployeeList
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
   private val getEmployees: GetEmployees,
+  private val getEmployeeByDepartment: GetEmployeeByDepartment,
   private val requestInitialEmployeeList: RequestInitialEmployeeList,
   private val uiEmployeeMapper: UiEmployeeMapper
 ) : ViewModel() {
@@ -43,7 +44,7 @@ class MainViewModel @Inject constructor(
   fun onEvent(event: MainEvent) {
     when (event) {
       MainEvent.RequestInitialEmployeesList -> loadAllEmployees()
-      is MainEvent.DepartmentChanged -> TODO()
+      is MainEvent.DepartmentChanged -> updateEmployeesWithFilter(event.department)
     }
   }
 
@@ -67,6 +68,21 @@ class MainViewModel @Inject constructor(
         isLoading = false,
         employees = updatedEmployeeSet.toList()
       )
+    }
+  }
+
+  private fun updateEmployeesWithFilter(department: String) {
+    viewModelScope.launch {
+      getEmployeeByDepartment(department)
+        .map { employees -> employees.map { uiEmployeeMapper.mapToView(it) } }
+        .catch { onFailure(it) }
+        .collect { newEmployeeList ->
+          _uiState.update { oldState ->
+            oldState.copy(
+              employees = newEmployeeList
+            )
+          }
+        }
     }
   }
 

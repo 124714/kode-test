@@ -29,7 +29,10 @@ class MainActivity : ComponentActivity() {
       KodeTestTheme {
         MainScreen(
           uiState = uiState,
-          onError = { requestInitialEmployeeList() }
+          onError = { requestInitialEmployeeList() },
+          onDepartmentChanged = { department ->
+            viewModel.onEvent(MainEvent.DepartmentChanged(department))
+          }
         )
       }
     }

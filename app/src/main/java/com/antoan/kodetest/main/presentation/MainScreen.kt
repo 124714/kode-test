@@ -65,9 +65,10 @@ enum class EmployeePage(@StringRes val titleResId: Int) {
 @Composable
 fun MainScreen(
   modifier: Modifier = Modifier,
-  pages: Array<EmployeePage> = EmployeePage.entries.toTypedArray(),
   uiState: MainViewState,
-  onError: () -> Unit
+  onDepartmentChanged: (department: String) -> Unit,
+  onError: () -> Unit,
+  pages: Array<EmployeePage> = EmployeePage.entries.toTypedArray()
 ) {
   if (uiState.failure != null && uiState.employees.isEmpty()) {
     // Условие для первоначальной загрузки данных
@@ -88,7 +89,7 @@ fun MainScreen(
       DepartmentPage(
         state = uiState,
         onEmployeeClick = {},
-        onFilterClick = {},
+        onFilterClick = onDepartmentChanged,
         pages = pages,
         modifier = Modifier.padding(top = contentPadding.calculateTopPadding())
       )
