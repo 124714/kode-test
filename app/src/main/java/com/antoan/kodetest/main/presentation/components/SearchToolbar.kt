@@ -66,9 +66,8 @@ fun SearchToolbar(
       onSearchQueryChanged = onSearchQueryChanged,
       searchQuery = searchQuery,
       isFocused = isFocused,
-      onFocusChanged = {
-        isFocused = it.isFocused
-      },
+      onFocusChanged = { isFocused = it.isFocused },
+      onFilterClick = onFilterClick,
       modifier = Modifier.weight(1f)
     )
     val density = LocalDensity.current
@@ -89,13 +88,13 @@ fun SearchToolbar(
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchTextField(
   modifier: Modifier = Modifier,
   searchQuery: String,
   onSearchQueryChanged: (String) -> Unit,
   onFocusChanged: (FocusState) -> Unit,
+  onFilterClick: () -> Unit,
   isFocused: Boolean
 ) {
   val focusRequester = remember { FocusRequester() }
@@ -139,7 +138,7 @@ private fun SearchTextField(
         }
       } else if (searchQuery.isEmpty() && !isFocused) {
         IconButton(
-          onClick = {}
+          onClick = onFilterClick
         ) {
           Icon(
             imageVector = Icons.Outlined.FilterList,

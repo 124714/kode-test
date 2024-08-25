@@ -6,22 +6,36 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,9 +47,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.antoan.kodetest.R
 import com.antoan.kodetest.common.presentation.model.UIEmployee
+import com.antoan.kodetest.common.presentation.model.fakeUIEmployeeList
 import com.antoan.kodetest.common.presentation.theme.KodeTestTheme
+import com.antoan.kodetest.main.domain.model.SortParameter
 import com.antoan.kodetest.main.presentation.components.EmployeeCard
 import com.antoan.kodetest.main.presentation.components.SearchToolbar
+import com.antoan.kodetest.main.presentation.components.SortOrderComponent
+import kotlinx.coroutines.launch
 
 @Composable
 fun EmployeesRoute(
@@ -59,14 +77,20 @@ enum class EmployeePage(@StringRes val titleResId: Int) {
   ANALYTICS(R.string.analytics_dep)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
   modifier: Modifier = Modifier,
-  uiState: MainViewState,
+  uiState: MainUiState,
   onDepartmentChanged: (department: String) -> Unit,
+  onOrderChanged: (SortParameter) -> Unit,
   onError: () -> Unit,
   pages: Array<EmployeePage> = EmployeePage.entries.toTypedArray()
 ) {
+  var openBottomSheet by rememberSaveable { mutableStateOf(false) }
+  val scope = rememberCoroutineScope()
+  val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+
   if (uiState.failure != null && uiState.employees.isEmpty()) {
     // Условие для первоначальной загрузки данных
     ErrorScreen(
@@ -80,9 +104,11 @@ fun MainScreen(
           searchQuery = "",
           onSearchQueryChanged = {/*TODO*/ },
           onCancelClick = { /*TODO*/ },
-          onFilterClick = { /*TODO*/ }
+          onFilterClick = {
+            openBottomSheet = !openBottomSheet
+          }
         )
-      }
+      },
     ) { contentPadding ->
       DepartmentPage(
         state = uiState,
@@ -92,6 +118,28 @@ fun MainScreen(
         modifier = Modifier.padding(top = contentPadding.calculateTopPadding())
       )
     }
+
+    // Sheet content
+    if (openBottomSheet) {
+      ModalBottomSheet(
+        modifier = Modifier.padding(horizontal = 8.dp),
+        onDismissRequest = { openBottomSheet  = false },
+        sheetState = bottomSheetState,
+      ) {
+        SortOrderComponent(
+          onOrderChanged = {
+            scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
+              if (!bottomSheetState.isVisible) {
+                openBottomSheet = false
+              }
+            }
+            onOrderChanged(it)
+          },
+          order = uiState.order
+        )
+
+      }
+    }
   }
 }
 
@@ -99,7 +147,7 @@ fun MainScreen(
 fun DepartmentPage(
   onEmployeeClick: (UIEmployee) -> Unit,
   onDepartmentChange: (department: String) -> Unit,
-  state: MainViewState,
+  state: MainUiState,
   pages: Array<EmployeePage>,
   modifier: Modifier = Modifier
 ) {
@@ -113,13 +161,19 @@ fun DepartmentPage(
   Column(modifier) {
     ScrollableTabRow(
       selectedTabIndex = currentPageIndex,
-      edgePadding = 0.dp
+      edgePadding = 16.dp
     ) {
       pages.forEachIndexed { index, page ->
         val title = stringResource(id = page.titleResId)
         Tab(
           selected = currentPageIndex == index,
-          text = { Text(title) },
+          text = {
+            Text(
+              text = title,
+              fontSize = 15.sp,
+              fontWeight = FontWeight.SemiBold
+            )
+          },
           onClick = { onPageChanged(index) }
         )
       }
@@ -132,10 +186,12 @@ fun DepartmentPage(
         state.isLoading -> {
           CircularProgressIndicator()
         }
-
         else -> {
           LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+              .fillMaxSize()
+              .padding(start = 16.dp, end = 16.dp)
           ) {
             items(state.employees) { employee ->
               EmployeeCard(
@@ -195,17 +251,31 @@ fun ErrorScreenPreview() {
   }
 }
 
-/*@OptIn(ExperimentalFoundationApi::class)
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+  KodeTestTheme {
+    val state = MainUiState(employees = fakeUIEmployeeList, isLoading = false)
+    MainScreen(
+      uiState = state,
+      onDepartmentChanged = {},
+      onOrderChanged = {},
+      onError = {}
+    )
+  }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun EmployeeScreenPreview() {
   KodeTestTheme {
-    val pagerState = rememberPagerState(pageCount = { EmployeePage.entries.size })
+    val state = MainUiState()
     DepartmentPage(
+      state = state,
+      onDepartmentChange = {},
       onEmployeeClick = {},
-      onFilterClick = {},
-      employees = fakeUIEmployeeList,
       pages = EmployeePage.entries.toTypedArray()
     )
   }
-}*/
+}

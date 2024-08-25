@@ -1,7 +1,7 @@
 package com.antoan.kodetest.common.domain.repository
 
 import com.antoan.kodetest.common.domain.model.Employee
-import com.antoan.kodetest.main.domain.model.SortParameters
+import com.antoan.kodetest.main.domain.model.SortParameter
 import kotlinx.coroutines.flow.Flow
 
 interface EmployeeRepository {

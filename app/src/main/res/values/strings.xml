@@ -20,4 +20,8 @@
     <string name="error_title">Какой-то сверхразум все сломал</string>
     <string name="error_subtitle">Постараемся быстро починить</string>
     <string name="error_button_text">Попробовать снова</string>
+
+    <string name="alphabetic_order">По алфавиту</string>
+    <string name="birthday_order">По дню рождения</string>
+    <string name="sort_title">Сортировка</string>
 </resources>

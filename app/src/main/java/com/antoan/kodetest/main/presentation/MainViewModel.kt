@@ -11,12 +11,13 @@ import com.antoan.kodetest.common.utils.createExceptionHandler
 import com.antoan.kodetest.main.domain.GetEmployeeByDepartment
 import com.antoan.kodetest.main.domain.GetEmployees
 import com.antoan.kodetest.main.domain.RequestInitialEmployeeList
-import com.antoan.kodetest.main.domain.model.SortParameters
+import com.antoan.kodetest.main.domain.model.SortParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -30,37 +31,43 @@ class MainViewModel @Inject constructor(
   private val uiEmployeeMapper: UiEmployeeMapper
 ) : ViewModel() {
 
-  private val _uiState = MutableStateFlow(MainViewState())
-  val uiState: StateFlow<MainViewState> = _uiState.asStateFlow()
+  private val _uiState = MutableStateFlow(MainUiState())
+  val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
   /*private val query = MutableStateFlow("")*/
   private val departmentState = MutableStateFlow("ALL")
-  /*private val order = MutableStateFlow(SortParameters.DEFAULT)*/
+  private val orderState = MutableStateFlow(SortParameter.ALPHABET)
 
   init {
     viewModelScope.launch {
-      getEmployees(departmentState)
+      getEmployees(departmentState, orderState)
         .map { employees -> employees.map { uiEmployeeMapper.mapToView(it) } }
         .catch { onFailure(it) }
-        .collect { onNewEmployeeList(it) }
+        .collect { onUpdateEmployees(it) }
     }
   }
 
   fun onEvent(event: MainEvent) {
     when (event) {
       MainEvent.RequestInitialEmployeesList -> loadAllEmployees()
-      is MainEvent.DepartmentChanged -> updateEmployeesDepartment(event.department)
-      is MainEvent.SortOrderChanged -> updateSortOrder(event.filterParameters)
+      is MainEvent.DepartmentChanged -> updateDepartment(event.department)
+      is MainEvent.SortOrderChanged -> updateSortOrder(event.order)
+      is MainEvent.QueryInput -> TODO()
     }
   }
 
-  private fun updateSortOrder(filterParameters: SortParameters) {
-    // TODO
+  private fun updateSortOrder(order: SortParameter) {
+    orderState.value = order
+
+    _uiState.update { oldState ->
+      oldState.copy(order = order)
+    }
   }
 
   private fun onFailure(failure: Throwable) {
     when (failure) {
-      is NetworkException, is NetworkUnavailableException -> {
+      is NetworkException,
+      is NetworkUnavailableException -> {
         _uiState.update { oldState ->
           oldState.copy(
             failure = Event(failure),
@@ -71,17 +78,16 @@ class MainViewModel @Inject constructor(
     }
   }
 
-  private fun onNewEmployeeList(employees: List<UIEmployee>) {
-//    val updatedEmployeeSet = (uiState.value.employees + employees).toSet()
+  private fun onUpdateEmployees(employees: List<UIEmployee>) {
     _uiState.update { oldState ->
       oldState.copy(
         isLoading = false,
-        employees = /*updatedEmployeeSet.toList()*/ employees
+        employees = employees
       )
     }
   }
 
-  private fun updateEmployeesDepartment(department: String) {
+  private fun updateDepartment(department: String) {
     departmentState.value = department
   }
 

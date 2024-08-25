@@ -13,10 +13,10 @@ interface EmployeeDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertEmployees(employees: List<CachedEmployee>)
 
-  @Query("SELECT * FROM employee")
+  @Query("SELECT * FROM employee ORDER BY first_name, last_name DESC")
   fun getAllEmployees(): Flow<List<CachedEmployee>>
 
-  @Query("SELECT * FROM employee WHERE department = :department")
+  @Query("SELECT * FROM employee WHERE department = :department ORDER BY first_name, last_name DESC")
   fun getEmployeesByDepartment(department: String): Flow<List<CachedEmployee>>
 
 }

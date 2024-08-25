@@ -26,7 +26,7 @@ fun EmployeeCard(
   employee: UIEmployee
 ) {
   Row(
-    modifier = modifier.padding(8.dp).fillMaxWidth(),
+    modifier = modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
   ) {
     EmployeeImage(

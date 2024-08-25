@@ -20,7 +20,8 @@ class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    requestInitialEmployeeList()
+    // Выполняет сетевой вызов
+//    requestInitialEmployeeList()
 
     setContent {
 
@@ -32,6 +33,9 @@ class MainActivity : ComponentActivity() {
           onError = { requestInitialEmployeeList() },
           onDepartmentChanged = { department ->
             viewModel.onEvent(MainEvent.DepartmentChanged(department))
+          },
+          onOrderChanged =  { order ->
+            viewModel.onEvent(MainEvent.SortOrderChanged(order))
           }
         )
       }
