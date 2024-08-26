@@ -1,5 +1,7 @@
 package com.antoan.kodetest.main.presentation.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,12 +20,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.antoan.kodetest.common.presentation.theme.KodeTestTheme
+import java.time.LocalDate
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun YearDivider(
   modifier: Modifier = Modifier,
-  year: String
 ) {
   Row(
     modifier = modifier.padding(horizontal = 8.dp, vertical = 20.dp),
@@ -35,7 +38,7 @@ fun YearDivider(
       .height(1.dp)
       .weight(1f))
     Text(
-      text = year,
+      text = LocalDate.now().year.plus(1).toString(),
       modifier = Modifier.padding(horizontal = 60.dp),
       fontSize = 15.sp,
       color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
@@ -47,13 +50,13 @@ fun YearDivider(
   }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun YearDividerPreview() {
   KodeTestTheme {
     YearDivider(
       modifier = Modifier.fillMaxWidth(),
-      year = "2022"
     )
   }
 }

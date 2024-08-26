@@ -1,5 +1,7 @@
 package com.antoan.kodetest.common.presentation.model.mappers
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.antoan.kodetest.common.domain.model.Department
 import com.antoan.kodetest.common.domain.model.Employee
 import com.antoan.kodetest.common.presentation.model.UIEmployee
@@ -7,6 +9,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class UiEmployeeMapper @Inject constructor(): UiMapper<Employee, UIEmployee> {
+  @RequiresApi(Build.VERSION_CODES.O)
   override fun mapToView(input: Employee): UIEmployee {
     return UIEmployee(
       id = input.id,

@@ -1,6 +1,7 @@
 package com.antoan.kodetest.main.presentation
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -109,8 +109,10 @@ class MainViewModel @Inject constructor(
       oldState.copy(
         isLoading = false,
         employees = employees,
-        dividerIndex = if(orderState.value == SortParameter.BIRTHDAY)
-          employees.calculateDividerIndex()
+        dividerIndex = if (orderState.value == SortParameter.BIRTHDAY)
+          employees.calculateDividerIndex().also {
+            Log.d("MainViewModel", " divider index: $it")
+          }
         else
           MainUiState.NOT_DIVIDER_INDEX,
         noSearchResult = oldState.isSearchMode && employees.isEmpty()
@@ -133,11 +135,12 @@ class MainViewModel @Inject constructor(
   }
 
   private fun List<UIEmployee>.calculateDividerIndex(): Int {
-    for (index in 1..lastIndex) {
-      if(this[index].birthday.month.value - this[index-1].birthday.month.value < 0) {
-        return index
+    if (this.all { it.birthdayIsNextYear() }) return 0
+    for (index in 0..<lastIndex) {
+      if (this[index + 1].birthday.month.value - this[index].birthday.month.value < 0) {
+        return index + 1
       }
     }
-    return 0
+    return MainUiState.NOT_DIVIDER_INDEX
   }
 }

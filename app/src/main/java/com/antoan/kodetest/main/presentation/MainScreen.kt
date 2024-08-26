@@ -49,6 +49,7 @@ import com.antoan.kodetest.main.presentation.components.SearchToolbar
 import com.antoan.kodetest.main.presentation.components.SortOrderComponent
 import com.antoan.kodetest.main.presentation.components.YearDivider
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable
 fun EmployeesRoute(
@@ -203,7 +204,12 @@ fun DepartmentPage(
               key = { _, employee -> employee.id }
             ) { index, employee ->
               if (state.order == SortParameter.BIRTHDAY && index == state.dividerIndex /*&& state.dividerIndex != 0*/) {
-                YearDivider(year = "2025")
+                // Некорректно работает:
+                // В режиме поиска с фильтром по дню рождения устанавливается разделитель
+                // хотя он не требуется
+                YearDivider(
+                  Modifier.then(if(index == 0) Modifier.padding(top = 20.dp) else Modifier)
+                )
               }
               EmployeeCard(
                 modifier = Modifier

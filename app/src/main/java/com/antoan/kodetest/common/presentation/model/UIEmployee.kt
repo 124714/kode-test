@@ -26,6 +26,13 @@ data class UIEmployee(
   val birthdayMonth = formatBirthday[1].substring(0,3)
   val birthdayDay = formatBirthday[2]
   val birthdayYear = formatBirthday[0]
+
+  fun birthdayIsNextYear(): Boolean {
+    val now = LocalDate.now()
+    val endOfYear = LocalDate.of(now.year, 12, 31)
+    val currentYearBirthday = LocalDate.of(LocalDate.now().year, birthday.month, birthday.dayOfMonth)
+    return currentYearBirthday !in now..endOfYear
+  }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -41,4 +48,5 @@ val fakeUIEmployee = UIEmployee(
   birthday = LocalDate.now()
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 val fakeUIEmployeeList = (1..20).map { fakeUIEmployee }
