@@ -51,7 +51,9 @@ class GetEmployees @Inject constructor(
         else employeesByDepartment
 
       val normalQuery = query.trim()
-      val filteredByQueryEmployees = sortedEmployees.filter { normalQuery in it.fullName.lowercase()}
+      val filteredByQueryEmployees = sortedEmployees.filter {
+        normalQuery in it.fullName.lowercase() || normalQuery in it.userTag.lowercase()
+      }
 
       filteredByQueryEmployees
     }.distinctUntilChanged()

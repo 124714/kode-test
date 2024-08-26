@@ -198,12 +198,17 @@ fun DepartmentPage(
               .fillMaxSize()
               .padding(start = 16.dp, end = 16.dp)
           ) {
-            itemsIndexed(state.employees) { index, employee ->
+            itemsIndexed(
+              items = state.employees,
+              key = { _, employee -> employee.id }
+            ) { index, employee ->
               if (state.order == SortParameter.BIRTHDAY && index == state.dividerIndex /*&& state.dividerIndex != 0*/) {
                 YearDivider(year = "2025")
               }
               EmployeeCard(
-                modifier = Modifier.clickable { onEmployeeClick(employee) },
+                modifier = Modifier
+                  .then(if(index == 0) Modifier.padding(top = 20.dp) else Modifier)
+                  .clickable { onEmployeeClick(employee) },
                 employee = employee
               )
             }
