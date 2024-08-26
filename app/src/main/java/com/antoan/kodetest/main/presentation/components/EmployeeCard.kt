@@ -60,7 +60,7 @@ fun EmployeeCard(
     Spacer(modifier = Modifier.weight(1f))
     Text(
 //      modifier = Modifier.weight(1f),
-      text = "${employee.birthdayDay} ${employee.birthdayMonth} ${employee.birthdayYear}",
+      text = "${employee.birthdayDay} ${employee.birthdayMonth}",
       fontSize = 15.sp,
 //      fontWeight = FontWeight.Medium,
       color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)

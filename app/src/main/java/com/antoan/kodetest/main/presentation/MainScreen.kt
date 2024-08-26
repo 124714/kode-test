@@ -200,7 +200,7 @@ fun DepartmentPage(
               .padding(start = 16.dp, end = 16.dp)
           ) {
             itemsIndexed(state.employees) { index, employee ->
-              if(state.order == SortParameter.BIRTHDAY && index == state.dividerIndex && state.dividerIndex != 0) {
+              if(state.order == SortParameter.BIRTHDAY && index == state.dividerIndex /*&& state.dividerIndex != 0*/) {
                 YearDivider(year = "2025")
               }
               EmployeeCard(

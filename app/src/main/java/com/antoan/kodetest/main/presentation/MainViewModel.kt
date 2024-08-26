@@ -97,7 +97,10 @@ class MainViewModel @Inject constructor(
       oldState.copy(
         isLoading = false,
         employees = employees,
-        dividerIndex = if(orderState.value == SortParameter.BIRTHDAY) employees.calculateDividerIndex() else 0
+        dividerIndex = if(orderState.value == SortParameter.BIRTHDAY)
+          employees.calculateDividerIndex()
+        else
+          MainUiState.NOT_DIVIDER_INDEX
       )
     }
   }
@@ -116,9 +119,8 @@ class MainViewModel @Inject constructor(
     }
   }
 
-  fun List<UIEmployee>.calculateDividerIndex(): Int {
-//    require(order == SortParameter.BIRTHDAY) { "Divider need"}
-    for (index in 1..this.lastIndex) {
+  private fun List<UIEmployee>.calculateDividerIndex(): Int {
+    for (index in 1..lastIndex) {
       if(this[index].birthday.month.value - this[index-1].birthday.month.value < 0) {
         return index
       }

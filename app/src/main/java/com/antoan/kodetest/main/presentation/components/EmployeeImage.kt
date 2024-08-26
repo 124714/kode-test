@@ -30,7 +30,7 @@ fun EmployeeImage(
     contentDescription = stringResource(R.string.description),
     contentScale = ContentScale.Crop,
     modifier = Modifier
-      .size(70.dp)
+      .size(72.dp)
       .clip(CircleShape)
   )
 }

@@ -12,5 +12,9 @@ data class MainUiState(
   val order: SortParameter = SortParameter.ALPHABET,
 //  val currentDepartment: String = "ALL",
   val failure: Event<Throwable>? = null,
-  val dividerIndex: Int = 0
-)
+  val dividerIndex: Int = NOT_DIVIDER_INDEX
+) {
+  companion object {
+    const val NOT_DIVIDER_INDEX = -1
+  }
+}
