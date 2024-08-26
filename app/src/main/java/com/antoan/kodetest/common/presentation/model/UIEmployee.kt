@@ -1,8 +1,12 @@
 package com.antoan.kodetest.common.presentation.model
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 data class UIEmployee(
   val id: String,
   val avatarUrl: String,
@@ -10,13 +14,21 @@ data class UIEmployee(
   val lastName: String,
   val position: String,
   val department: String,
-  val userTag: String,
+  val nickname: String,
   val birthday: LocalDate,
   val phone: String
 ) {
+
+  private val formatBirthday = birthday
+    .format(DateTimeFormatter.ofPattern("yyyy-MMM-dd"))
+    .split("-")
   val fullName = "$firstName $lastName"
+  val birthdayMonth = formatBirthday[1].substring(0,3)
+  val birthdayDay = formatBirthday[2]
+  val birthdayYear = formatBirthday[0]
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 val fakeUIEmployee = UIEmployee(
   id = "dlfj-23nf-23fn",
   firstName = "Мария",
@@ -24,7 +36,7 @@ val fakeUIEmployee = UIEmployee(
   avatarUrl = "https://i.pravatar.cc/150",
   position = "Дизайнер",
   department = "Дизайн",
-  userTag = "LK",
+  nickname = "lk",
   phone = "345-123-5432",
   birthday = LocalDate.now()
 )

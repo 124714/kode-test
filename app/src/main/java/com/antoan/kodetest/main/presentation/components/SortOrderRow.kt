@@ -1,5 +1,6 @@
 package com.antoan.kodetest.main.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ fun SortOrderComponent(
   onOrderChanged: (SortParameter) -> Unit,
   order: SortParameter
 ) {
+
   Column{
     Text(
       modifier = Modifier
@@ -43,7 +45,9 @@ fun SortOrderComponent(
       fontWeight = FontWeight.SemiBold
     )
     Row(
-      modifier = modifier.fillMaxWidth(),
+      modifier = modifier
+        .fillMaxWidth()
+        .clickable { onOrderChanged(SortParameter.ALPHABET) },
       verticalAlignment = Alignment.CenterVertically
     ) {
       RadioButton(
@@ -57,7 +61,9 @@ fun SortOrderComponent(
       )
     }
     Row(
-      modifier = modifier.fillMaxWidth(),
+      modifier = modifier
+        .fillMaxWidth()
+        .clickable { onOrderChanged(SortParameter.BIRTHDAY) },
       verticalAlignment = Alignment.CenterVertically
     ) {
       RadioButton(

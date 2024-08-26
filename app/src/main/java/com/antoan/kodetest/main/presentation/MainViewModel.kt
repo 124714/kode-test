@@ -1,5 +1,7 @@
 package com.antoan.kodetest.main.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antoan.kodetest.common.domain.model.NetworkException
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @HiltViewModel
 class MainViewModel @Inject constructor(
   private val getEmployees: GetEmployees,
@@ -34,7 +37,7 @@ class MainViewModel @Inject constructor(
   private val _uiState = MutableStateFlow(MainUiState())
   val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-  /*private val query = MutableStateFlow("")*/
+  private val queryState = MutableStateFlow("")
   private val departmentState = MutableStateFlow("ALL")
   private val orderState = MutableStateFlow(SortParameter.ALPHABET)
 
@@ -58,33 +61,16 @@ class MainViewModel @Inject constructor(
 
   private fun updateSortOrder(order: SortParameter) {
     orderState.value = order
-
-    _uiState.update { oldState ->
-      oldState.copy(order = order)
-    }
-  }
-
-  private fun onFailure(failure: Throwable) {
-    when (failure) {
-      is NetworkException,
-      is NetworkUnavailableException -> {
-        _uiState.update { oldState ->
-          oldState.copy(
-            failure = Event(failure),
-            isLoading = false
-          )
-        }
-      }
-    }
-  }
-
-  private fun onUpdateEmployees(employees: List<UIEmployee>) {
+    // Нужно исправить: UI нет необходиомсти потреблять это состояние (order)
     _uiState.update { oldState ->
       oldState.copy(
-        isLoading = false,
-        employees = employees
+        order = order
       )
     }
+  }
+
+  private fun updateQueryInput(input: String) {
+    queryState.value = input
   }
 
   private fun updateDepartment(department: String) {
@@ -105,4 +91,40 @@ class MainViewModel @Inject constructor(
       }
     }
   }
+
+  private fun onUpdateEmployees(employees: List<UIEmployee>) {
+    _uiState.update { oldState ->
+      oldState.copy(
+        isLoading = false,
+        employees = employees,
+        dividerIndex = if(orderState.value == SortParameter.BIRTHDAY) employees.calculateDividerIndex() else 0
+      )
+    }
+  }
+
+  private fun onFailure(failure: Throwable) {
+    when (failure) {
+      is NetworkException,
+      is NetworkUnavailableException -> {
+        _uiState.update { oldState ->
+          oldState.copy(
+            failure = Event(failure),
+            isLoading = false
+          )
+        }
+      }
+    }
+  }
+
+  fun List<UIEmployee>.calculateDividerIndex(): Int {
+//    require(order == SortParameter.BIRTHDAY) { "Divider need"}
+    for (index in 1..this.lastIndex) {
+      if(this[index].birthday.month.value - this[index-1].birthday.month.value < 0) {
+        return index
+      }
+    }
+    return 0
+  }
+
+
 }

@@ -1,5 +1,7 @@
 package com.antoan.kodetest.main.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -53,6 +56,7 @@ import com.antoan.kodetest.main.domain.model.SortParameter
 import com.antoan.kodetest.main.presentation.components.EmployeeCard
 import com.antoan.kodetest.main.presentation.components.SearchToolbar
 import com.antoan.kodetest.main.presentation.components.SortOrderComponent
+import com.antoan.kodetest.main.presentation.components.YearDivider
 import kotlinx.coroutines.launch
 
 @Composable
@@ -77,6 +81,7 @@ enum class EmployeePage(@StringRes val titleResId: Int) {
   ANALYTICS(R.string.analytics_dep)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
@@ -143,6 +148,7 @@ fun MainScreen(
   }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DepartmentPage(
   onEmployeeClick: (UIEmployee) -> Unit,
@@ -193,7 +199,10 @@ fun DepartmentPage(
               .fillMaxSize()
               .padding(start = 16.dp, end = 16.dp)
           ) {
-            items(state.employees) { employee ->
+            itemsIndexed(state.employees) { index, employee ->
+              if(state.order == SortParameter.BIRTHDAY && index == state.dividerIndex && state.dividerIndex != 0) {
+                YearDivider(year = "2025")
+              }
               EmployeeCard(
                 modifier = Modifier.clickable { onEmployeeClick(employee) },
                 employee = employee
@@ -252,6 +261,7 @@ fun ErrorScreenPreview() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
@@ -266,6 +276,7 @@ fun MainScreenPreview() {
   }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun EmployeeScreenPreview() {

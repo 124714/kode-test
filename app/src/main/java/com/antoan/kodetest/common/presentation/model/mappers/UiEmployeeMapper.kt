@@ -3,6 +3,7 @@ package com.antoan.kodetest.common.presentation.model.mappers
 import com.antoan.kodetest.common.domain.model.Department
 import com.antoan.kodetest.common.domain.model.Employee
 import com.antoan.kodetest.common.presentation.model.UIEmployee
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class UiEmployeeMapper @Inject constructor(): UiMapper<Employee, UIEmployee> {
@@ -14,7 +15,7 @@ class UiEmployeeMapper @Inject constructor(): UiMapper<Employee, UIEmployee> {
       lastName = input.lastName,
       position = input.position,
       department = input.department.toString(),
-      userTag = input.userTag,
+      nickname = input.userTag.lowercase(),
       birthday = input.birthday,
       phone = input.phone
     )

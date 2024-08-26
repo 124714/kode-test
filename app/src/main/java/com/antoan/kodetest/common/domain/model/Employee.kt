@@ -1,5 +1,7 @@
 package com.antoan.kodetest.common.domain.model
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.time.LocalDate
 
 data class Employee(
@@ -14,4 +16,6 @@ data class Employee(
   val phone: String
 ) {
   val fullName = "$firstName $lastName"
+  @RequiresApi(Build.VERSION_CODES.O)
+  val currentYearBirthday = LocalDate.of(LocalDate.now().year, birthday.month, birthday.dayOfMonth)
 }
