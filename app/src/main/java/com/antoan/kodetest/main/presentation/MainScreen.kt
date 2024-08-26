@@ -8,29 +8,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -86,11 +77,13 @@ enum class EmployeePage(@StringRes val titleResId: Int) {
 @Composable
 fun MainScreen(
   modifier: Modifier = Modifier,
+  pages: Array<EmployeePage> = EmployeePage.entries.toTypedArray(),
   uiState: MainUiState,
   onDepartmentChanged: (department: String) -> Unit,
   onOrderChanged: (SortParameter) -> Unit,
-  onError: () -> Unit,
-  pages: Array<EmployeePage> = EmployeePage.entries.toTypedArray()
+  onSearchQueryChanged: (String) -> Unit,
+  onSearchModeChanged: (Boolean) -> Unit,
+  onError: () -> Unit
 ) {
   var openBottomSheet by rememberSaveable { mutableStateOf(false) }
   val scope = rememberCoroutineScope()
@@ -106,12 +99,13 @@ fun MainScreen(
       modifier = modifier,
       topBar = {
         SearchToolbar(
-          searchQuery = "",
-          onSearchQueryChanged = {/*TODO*/ },
-          onCancelClick = { /*TODO*/ },
+          searchQuery = uiState.searchQuery,
+          onSearchQueryChanged = onSearchQueryChanged,
+          onSearchModeChanged = onSearchModeChanged,
           onFilterClick = {
             openBottomSheet = !openBottomSheet
-          }
+          },
+          filterParam = uiState.order
         )
       },
     ) { contentPadding ->
@@ -128,7 +122,7 @@ fun MainScreen(
     if (openBottomSheet) {
       ModalBottomSheet(
         modifier = Modifier.padding(horizontal = 8.dp),
-        onDismissRequest = { openBottomSheet  = false },
+        onDismissRequest = { openBottomSheet = false },
         sheetState = bottomSheetState,
       ) {
         SortOrderComponent(
@@ -192,6 +186,11 @@ fun DepartmentPage(
         state.isLoading -> {
           CircularProgressIndicator()
         }
+
+        state.isSearchMode && state.noSearchResult -> {
+          EmptyQueryScreen()
+        }
+
         else -> {
           LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -200,7 +199,7 @@ fun DepartmentPage(
               .padding(start = 16.dp, end = 16.dp)
           ) {
             itemsIndexed(state.employees) { index, employee ->
-              if(state.order == SortParameter.BIRTHDAY && index == state.dividerIndex /*&& state.dividerIndex != 0*/) {
+              if (state.order == SortParameter.BIRTHDAY && index == state.dividerIndex /*&& state.dividerIndex != 0*/) {
                 YearDivider(year = "2025")
               }
               EmployeeCard(
@@ -250,6 +249,42 @@ fun ErrorScreen(
   }
 }
 
+@Composable
+fun EmptyQueryScreen(
+  modifier: Modifier = Modifier
+) {
+  Column(
+    modifier = modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Image(
+      modifier = Modifier.size(56.dp),
+      painter = painterResource(R.drawable.ic_empty_query),
+      contentDescription = null
+    )
+
+    Text(
+      text = stringResource(R.string.empty_query_title),
+      fontWeight = FontWeight.SemiBold,
+      fontSize = 17.sp
+    )
+    Text(
+      text = stringResource(R.string.empty_query_subtitle),
+      color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+      fontSize = 16.sp
+    )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EmptyScreenPreview() {
+  KodeTestTheme {
+    EmptyQueryScreen()
+  }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ErrorScreenPreview() {
@@ -271,7 +306,9 @@ fun MainScreenPreview() {
       uiState = state,
       onDepartmentChanged = {},
       onOrderChanged = {},
-      onError = {}
+      onError = {},
+      onSearchQueryChanged = {},
+      onSearchModeChanged = {}
     )
   }
 }

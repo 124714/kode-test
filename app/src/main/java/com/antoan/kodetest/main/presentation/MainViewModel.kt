@@ -43,7 +43,7 @@ class MainViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      getEmployees(departmentState, orderState)
+      getEmployees(departmentState, orderState, queryState)
         .map { employees -> employees.map { uiEmployeeMapper.mapToView(it) } }
         .catch { onFailure(it) }
         .collect { onUpdateEmployees(it) }
@@ -55,7 +55,14 @@ class MainViewModel @Inject constructor(
       MainEvent.RequestInitialEmployeesList -> loadAllEmployees()
       is MainEvent.DepartmentChanged -> updateDepartment(event.department)
       is MainEvent.SortOrderChanged -> updateSortOrder(event.order)
-      is MainEvent.QueryInput -> TODO()
+      is MainEvent.QueryChanged -> updateQueryInput(event.input)
+      is MainEvent.SearchModeChanged -> updateSearchMode(event.isActive)
+    }
+  }
+
+  private fun updateSearchMode(isActive: Boolean) {
+    _uiState.update { oldState ->
+      oldState.copy(isSearchMode = isActive)
     }
   }
 
@@ -71,6 +78,11 @@ class MainViewModel @Inject constructor(
 
   private fun updateQueryInput(input: String) {
     queryState.value = input
+    _uiState.update { oldState ->
+      oldState.copy(
+        searchQuery = input,
+      )
+    }
   }
 
   private fun updateDepartment(department: String) {
@@ -100,7 +112,8 @@ class MainViewModel @Inject constructor(
         dividerIndex = if(orderState.value == SortParameter.BIRTHDAY)
           employees.calculateDividerIndex()
         else
-          MainUiState.NOT_DIVIDER_INDEX
+          MainUiState.NOT_DIVIDER_INDEX,
+        noSearchResult = oldState.isSearchMode && employees.isEmpty()
       )
     }
   }
@@ -127,6 +140,4 @@ class MainViewModel @Inject constructor(
     }
     return 0
   }
-
-
 }

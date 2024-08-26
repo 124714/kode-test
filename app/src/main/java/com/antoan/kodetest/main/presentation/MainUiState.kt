@@ -8,9 +8,11 @@ import com.antoan.kodetest.main.domain.model.SortParameter
 
 data class MainUiState(
   val isLoading: Boolean = true,
+  val isSearchMode: Boolean = false,
+  val noSearchResult: Boolean = false,
+  val searchQuery: String = "",
   val employees: List<UIEmployee> = emptyList(),
   val order: SortParameter = SortParameter.ALPHABET,
-//  val currentDepartment: String = "ALL",
   val failure: Event<Throwable>? = null,
   val dividerIndex: Int = NOT_DIVIDER_INDEX
 ) {

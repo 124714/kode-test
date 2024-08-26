@@ -9,6 +9,7 @@ import com.antoan.kodetest.main.domain.model.SortParameter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
@@ -21,13 +22,15 @@ class GetEmployees @Inject constructor(
   @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
   operator fun invoke(
     department: StateFlow<String>,
-    sort: StateFlow<SortParameter>
+    sort: StateFlow<SortParameter>,
+    query: StateFlow<String>
   ): Flow<List<Employee>> {
     return combine(
       employeeRepository.getAllEmployees(),
       department,
-      sort
-    ) { employees, department, sort ->
+      sort,
+      query
+    ) { employees, department, sort, query ->
       val employeesByDepartment = if (department == "ALL") {
         employees
       } else {
@@ -46,8 +49,12 @@ class GetEmployees @Inject constructor(
             }
         }
         else employeesByDepartment
-      sortedEmployees
-    }
+
+      val normalQuery = query.trim()
+      val filteredByQueryEmployees = sortedEmployees.filter { normalQuery in it.fullName.lowercase()}
+
+      filteredByQueryEmployees
+    }.distinctUntilChanged()
   }
 }
 

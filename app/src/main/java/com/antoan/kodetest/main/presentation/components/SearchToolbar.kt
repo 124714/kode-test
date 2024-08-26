@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,13 +45,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.antoan.kodetest.R
+import com.antoan.kodetest.main.domain.model.SortParameter
 
 @Composable
 fun SearchToolbar(
   searchQuery: String,
   onSearchQueryChanged: (String) -> Unit,
-  onCancelClick: () -> Unit,
+  onSearchModeChanged: (Boolean) -> Unit,
   onFilterClick: () -> Unit,
+  filterParam: SortParameter,
   modifier: Modifier = Modifier,
 ) {
 
@@ -66,8 +67,12 @@ fun SearchToolbar(
       onSearchQueryChanged = onSearchQueryChanged,
       searchQuery = searchQuery,
       isFocused = isFocused,
-      onFocusChanged = { isFocused = it.isFocused },
+      onFocusChanged = {
+        isFocused = it.isFocused
+        onSearchModeChanged(it.isFocused)
+      },
       onFilterClick = onFilterClick,
+      filterParam = filterParam,
       modifier = Modifier.weight(1f)
     )
     val density = LocalDensity.current
@@ -78,7 +83,10 @@ fun SearchToolbar(
       Text(
         modifier = modifier
           .padding(end = 16.dp)
-          .clickable { isFocused = false },
+          .clickable {
+            isFocused = false
+            onSearchQueryChanged("")
+          },
         text = "Отмена",
         color = MaterialTheme.colorScheme.primary,
         fontSize = 16.sp
@@ -95,6 +103,7 @@ private fun SearchTextField(
   onSearchQueryChanged: (String) -> Unit,
   onFocusChanged: (FocusState) -> Unit,
   onFilterClick: () -> Unit,
+  filterParam: SortParameter,
   isFocused: Boolean
 ) {
   val focusRequester = remember { FocusRequester() }
@@ -143,7 +152,11 @@ private fun SearchTextField(
           Icon(
             imageVector = Icons.Outlined.FilterList,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface
+            tint = if (filterParam == SortParameter.BIRTHDAY) {
+              MaterialTheme.colorScheme.primary
+            } else {
+              MaterialTheme.colorScheme.onSurface
+            }
           )
         }
       }
@@ -194,8 +207,9 @@ fun SearchToolbarPreview() {
     SearchToolbar(
       searchQuery = "",
       onSearchQueryChanged = {},
-      onCancelClick = {},
-      onFilterClick = {}
+      onFilterClick = {},
+      filterParam = SortParameter.BIRTHDAY,
+      onSearchModeChanged = {}
     )
   }
 }
