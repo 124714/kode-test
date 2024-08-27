@@ -20,4 +20,10 @@ data class MainUiState(
   companion object {
     const val NOT_DIVIDER_INDEX = -1
   }
+
+  /**
+   * Проверка успеха или неудачи при первоначальной загрузке данных (отсутствие сети). Используется для отображения [ErrorScreen]
+   */
+  val isInitialLoadFailed: Boolean
+    get() = failure != null && employees.isEmpty()
 }
