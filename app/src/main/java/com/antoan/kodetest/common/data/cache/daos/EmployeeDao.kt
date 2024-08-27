@@ -8,15 +8,14 @@ import com.antoan.kodetest.common.data.cache.model.CachedEmployee
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface EmployeeDao {
+abstract class EmployeeDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertEmployees(employees: List<CachedEmployee>)
+  abstract fun insertEmployees(employees: List<CachedEmployee>)
 
   @Query("SELECT * FROM employee ORDER BY first_name, last_name DESC")
-  fun getAllEmployees(): Flow<List<CachedEmployee>>
+  abstract fun getAllEmployees(): Flow<List<CachedEmployee>>
 
   @Query("SELECT * FROM employee WHERE department = :department ORDER BY first_name, last_name DESC")
-  fun getEmployeesByDepartment(department: String): Flow<List<CachedEmployee>>
-
+  abstract fun getEmployeesByDepartment(department: String): Flow<List<CachedEmployee>>
 }

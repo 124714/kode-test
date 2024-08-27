@@ -6,12 +6,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.antoan.kodetest.R
 import com.antoan.kodetest.common.presentation.theme.KodeTestTheme
 import com.antoan.kodetest.main.presentation.MainEvent
 import com.antoan.kodetest.main.presentation.MainScreen
 import com.antoan.kodetest.main.presentation.MainViewModel
+import com.antoan.kodetest.temp.PullToRefreshScreen
+import com.antoan.kodetest.temp.RefreshLayoutWithList
+import com.antoan.kodetest.temp.SearchScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,8 +51,17 @@ class MainActivity : ComponentActivity() {
           },
           onSearchModeChanged = { isActive ->
             viewModel.onEvent(MainEvent.SearchModeChanged(isActive))
+          },
+          onRefresh = {
+            viewModel.onEvent(MainEvent.RefreshEmployeeList)
           }
         )
+
+//        SearchScreen(modifier = Modifier.fillMaxSize())
+        /*PullToRefreshScreen(
+          Modifier.fillMaxSize()
+        )*/
+//        RefreshLayoutWithList()
       }
     }
   }

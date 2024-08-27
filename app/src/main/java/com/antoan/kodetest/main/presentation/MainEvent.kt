@@ -8,5 +8,6 @@ sealed class MainEvent {
   data class SortOrderChanged(val order: SortParameter): MainEvent()
   data class QueryChanged(val input: String): MainEvent()
   data class SearchModeChanged(val isActive: Boolean): MainEvent()
+  data object RefreshEmployeeList: MainEvent()
 }
 

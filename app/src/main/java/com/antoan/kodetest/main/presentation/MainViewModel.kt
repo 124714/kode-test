@@ -57,8 +57,10 @@ class MainViewModel @Inject constructor(
       is MainEvent.SortOrderChanged -> updateSortOrder(event.order)
       is MainEvent.QueryChanged -> updateQueryInput(event.input)
       is MainEvent.SearchModeChanged -> updateSearchMode(event.isActive)
+      is MainEvent.RefreshEmployeeList -> reloadAllEmployees()
     }
   }
+
 
   private fun updateSearchMode(isActive: Boolean) {
     _uiState.update { oldState ->
@@ -101,6 +103,16 @@ class MainViewModel @Inject constructor(
       viewModelScope.launch(exceptionHandler) {
         requestInitialEmployeeList.invoke()
       }
+    }
+  }
+
+  private fun reloadAllEmployees() {
+    val errorMessage = "Failed to fetch employees"
+    val exceptionHandler = viewModelScope.createExceptionHandler(errorMessage) { onFailure(it) }
+    viewModelScope.launch(exceptionHandler) {
+      _uiState.update { it.copy(isRefreshing = true) }
+      requestInitialEmployeeList.invoke()
+      _uiState.update { it.copy(isRefreshing = false) }
     }
   }
 

@@ -1,6 +1,5 @@
 package com.antoan.kodetest.temp
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -29,8 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,13 +72,19 @@ fun KodeSearchBar(
 ) {
   val focusRequester = remember { FocusRequester() }
   val focusManager = LocalFocusManager.current
-  var active by rememberSaveable { mutableStateOf(false) }
+  val keyboardController = LocalSoftwareKeyboardController.current
+
+  var isActiveSearchBar by rememberSaveable { mutableStateOf(false) }
+
+  val onSearchQueryExplicitly = { q: String ->
+    onQueryChange(query)
+    keyboardController?.hide()
+  }
 
   Row(
     modifier = modifier.padding(horizontal = 8.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
-
     SearchBar(
       modifier = modifier
         .focusRequester(focusRequester)
@@ -126,12 +131,9 @@ fun KodeSearchBar(
         Text(text = stringResource(id = R.string.search_hint))
       },
       active = false,
-      onActiveChange = {
-        active = it
-        Log.d("SearchScreen", "active: $it")
-      },
+      onActiveChange = {},
       onSearch = {
-        /*active = false*/
+        onSearchQueryExplicitly(it)
       },
       content = {},
     )
@@ -139,9 +141,8 @@ fun KodeSearchBar(
     Text(
       modifier = modifier
         .clickable {
-          /*isFocused = false*/
           onQueryChange("")
-          active = false
+          isActiveSearchBar = false
           focusManager.clearFocus()
         },
       text = "Отмена",

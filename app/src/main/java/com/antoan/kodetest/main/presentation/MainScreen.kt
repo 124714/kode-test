@@ -48,6 +48,8 @@ import com.antoan.kodetest.main.presentation.components.EmployeeCard
 import com.antoan.kodetest.main.presentation.components.SearchToolbar
 import com.antoan.kodetest.main.presentation.components.SortOrderComponent
 import com.antoan.kodetest.main.presentation.components.YearDivider
+import io.github.frankieshao.refreshlayout.RefreshLayout
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -84,6 +86,7 @@ fun MainScreen(
   onOrderChanged: (SortParameter) -> Unit,
   onSearchQueryChanged: (String) -> Unit,
   onSearchModeChanged: (Boolean) -> Unit,
+  onRefresh: () -> Unit,
   onError: () -> Unit
 ) {
   var openBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -114,6 +117,7 @@ fun MainScreen(
         state = uiState,
         onEmployeeClick = {},
         onDepartmentChange = onDepartmentChanged,
+        onRefresh = onRefresh,
         pages = pages,
         modifier = Modifier.padding(top = contentPadding.calculateTopPadding())
       )
@@ -143,11 +147,13 @@ fun MainScreen(
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DepartmentPage(
   onEmployeeClick: (UIEmployee) -> Unit,
   onDepartmentChange: (department: String) -> Unit,
+  onRefresh: () -> Unit,
   state: MainUiState,
   pages: Array<EmployeePage>,
   modifier: Modifier = Modifier
@@ -193,33 +199,52 @@ fun DepartmentPage(
         }
 
         else -> {
-          LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-              .fillMaxSize()
-              .padding(start = 16.dp, end = 16.dp)
-          ) {
-            itemsIndexed(
-              items = state.employees,
-              key = { _, employee -> employee.id }
-            ) { index, employee ->
-              if (state.order == SortParameter.BIRTHDAY && index == state.dividerIndex /*&& state.dividerIndex != 0*/) {
-                // Некорректно работает:
-                // В режиме поиска с фильтром по дню рождения устанавливается разделитель
-                // хотя он не требуется
-                YearDivider(
-                  Modifier.then(if(index == 0) Modifier.padding(top = 20.dp) else Modifier)
-                )
-              }
-              EmployeeCard(
-                modifier = Modifier
-                  .then(if(index == 0) Modifier.padding(top = 20.dp) else Modifier)
-                  .clickable { onEmployeeClick(employee) },
-                employee = employee
-              )
-            }
-          }
+          EmployeePageContent(
+            state = state,
+            onEmployeeClick = onEmployeeClick,
+            isRefresh = state.isRefreshing,
+            onRefresh = onRefresh
+          )
         }
+      }
+    }
+  }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EmployeePageContent(
+  state: MainUiState,
+  onEmployeeClick: (UIEmployee) -> Unit,
+  isRefresh: Boolean,
+  onRefresh: () -> Unit
+) {
+  RefreshLayout(
+    isRefreshing = isRefresh,
+    onRefresh = onRefresh,
+  ) {
+    LazyColumn(
+      verticalArrangement = Arrangement.spacedBy(12.dp),
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(start = 16.dp, end = 16.dp)
+    ) {
+      itemsIndexed(
+        items = state.employees,
+        key = { _, employee -> employee.id }
+      ) { index, employee ->
+        if (state.order == SortParameter.BIRTHDAY && index == state.dividerIndex) {
+          YearDivider(
+            Modifier.then(if (index == 0) Modifier.padding(top = 20.dp) else Modifier)
+          )
+        }
+        EmployeeCard(
+          modifier = Modifier
+            .then(if (index == 0) Modifier.padding(top = 20.dp) else Modifier)
+            .clickable { onEmployeeClick(employee) },
+          employee = employee
+        )
       }
     }
   }
@@ -319,7 +344,8 @@ fun MainScreenPreview() {
       onOrderChanged = {},
       onError = {},
       onSearchQueryChanged = {},
-      onSearchModeChanged = {}
+      onSearchModeChanged = {},
+      onRefresh = {}
     )
   }
 }
@@ -334,7 +360,8 @@ fun EmployeeScreenPreview() {
       state = state,
       onDepartmentChange = {},
       onEmployeeClick = {},
-      pages = EmployeePage.entries.toTypedArray()
+      pages = EmployeePage.entries.toTypedArray(),
+      onRefresh = {}
     )
   }
 }

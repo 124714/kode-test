@@ -7,6 +7,7 @@ import com.antoan.kodetest.common.presentation.model.UIEmployee
 import com.antoan.kodetest.main.domain.model.SortParameter
 
 data class MainUiState(
+  val isRefreshing: Boolean = false,
   val isLoading: Boolean = true,
   val isSearchMode: Boolean = false,
   val noSearchResult: Boolean = false,
