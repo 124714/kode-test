@@ -29,7 +29,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
   private val getEmployees: GetEmployees,
-  private val getEmployeeByDepartment: GetEmployeeByDepartment,
   private val requestInitialEmployeeList: RequestInitialEmployeeList,
   private val uiEmployeeMapper: UiEmployeeMapper
 ) : ViewModel() {
@@ -60,7 +59,6 @@ class MainViewModel @Inject constructor(
       is MainEvent.RefreshEmployeeList -> reloadAllEmployees()
     }
   }
-
 
   private fun updateSearchMode(isActive: Boolean) {
     _uiState.update { oldState ->
@@ -107,6 +105,9 @@ class MainViewModel @Inject constructor(
   }
 
   private fun reloadAllEmployees() {
+    _uiState.update {
+      it.copy(failure = null)
+    }
     val errorMessage = "Failed to fetch employees"
     val exceptionHandler = viewModelScope.createExceptionHandler(errorMessage) { onFailure(it) }
     viewModelScope.launch(exceptionHandler) {
@@ -139,10 +140,22 @@ class MainViewModel @Inject constructor(
         _uiState.update { oldState ->
           oldState.copy(
             failure = Event(failure),
-            isLoading = false
+            isLoading = false,
+            isRefreshing = false
           )
         }
       }
+
+      /*else -> {
+        Log.d("MainViewModel", "Failure: ${failure.message}")
+        _uiState.update { oldState ->
+          oldState.copy(
+            failure = Event(failure),
+            isLoading = false,
+            isRefreshing = false
+          )
+        }
+      }*/
     }
   }
 

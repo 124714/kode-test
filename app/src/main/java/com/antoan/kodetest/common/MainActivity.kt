@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.antoan.kodetest.R
 import com.antoan.kodetest.common.presentation.theme.KodeTestTheme
@@ -30,12 +31,10 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
 
     // Выполняет сетевой вызов
-//    requestInitialEmployeeList()
+    requestInitialEmployeeList()
 
     setContent {
-
       val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
       KodeTestTheme {
         MainScreen(
           uiState = uiState,
@@ -56,12 +55,6 @@ class MainActivity : ComponentActivity() {
             viewModel.onEvent(MainEvent.RefreshEmployeeList)
           }
         )
-
-//        SearchScreen(modifier = Modifier.fillMaxSize())
-        /*PullToRefreshScreen(
-          Modifier.fillMaxSize()
-        )*/
-//        RefreshLayoutWithList()
       }
     }
   }

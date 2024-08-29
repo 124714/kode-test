@@ -93,7 +93,20 @@ fun MainScreen(
   val scope = rememberCoroutineScope()
   val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
-  if (uiState.failure != null && uiState.employees.isEmpty()) {
+  /*val snackbarHostState = remember { SnackbarHostState() }
+  LaunchedEffect(uiState.isRefreshing) {
+    if(uiState.isRefreshing) {
+      scope.launch {
+        snackbarHostState.showSnackbar("Гружусь...")
+      }
+    } else {
+      scope.launch {
+        snackbarHostState.showSnackbar("Не получилось...")
+      }
+    }
+  }*/
+
+  if (uiState.isInitialLoadFailed) {
     // Условие для первоначальной загрузки данных
     ErrorScreen(
       onRetry = onError
@@ -101,6 +114,15 @@ fun MainScreen(
   } else {
     Scaffold(
       modifier = modifier,
+      /*snackbarHost = {
+        SnackbarHost(hostState = snackbarHostState) { data ->
+          Snackbar(
+            snackbarData = data,
+            containerColor = Color.Blue,
+            shape = RoundedCornerShape(12.dp)
+          )
+        }
+      },*/
       topBar = {
         SearchToolbar(
           searchQuery = uiState.searchQuery,
@@ -147,7 +169,6 @@ fun MainScreen(
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DepartmentPage(
@@ -199,7 +220,7 @@ fun DepartmentPage(
         }
 
         else -> {
-          EmployeePageContent(
+          DepartmentPageContent(
             state = state,
             onEmployeeClick = onEmployeeClick,
             isRefresh = state.isRefreshing,
@@ -214,7 +235,7 @@ fun DepartmentPage(
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun EmployeePageContent(
+private fun DepartmentPageContent(
   state: MainUiState,
   onEmployeeClick: (UIEmployee) -> Unit,
   isRefresh: Boolean,

@@ -120,6 +120,11 @@ dependencies {
   androidTestImplementation("com.google.truth:truth:1.4.2")
   androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
 
+  //
+  debugImplementation("com.google.truth:truth:1.1.2")
+  debugImplementation("androidx.arch.core:core-testing:2.2.0")
+  debugImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
+
   // Testing:[Default]
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
