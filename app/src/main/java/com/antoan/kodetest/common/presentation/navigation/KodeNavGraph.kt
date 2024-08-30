@@ -5,9 +5,11 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.antoan.kodetest.detail.DetailsRoute
 import com.antoan.kodetest.main.presentation.MainRoute
 
@@ -27,16 +29,17 @@ fun KodeNavGraph(
       route = "main"
     ) {
       MainRoute(
-        navigateToDetails = {
-          navController.navigate("detail")
-        }
+        navController = navController
       )
     }
 
     composable(
-      route = "detail"
-    ) {
-      DetailsRoute()
+      route = "details/{userId}",
+      arguments = listOf(navArgument("userId") { type = NavType.StringType})
+    ) { backStackEntry ->
+      DetailsRoute(
+        userId = backStackEntry.arguments?.getString("userId")
+      )
     }
   }
 }

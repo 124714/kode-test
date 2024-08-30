@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.antoan.kodetest.R
 import com.antoan.kodetest.common.presentation.model.UIEmployee
 import com.antoan.kodetest.common.presentation.model.fakeUIEmployeeList
@@ -73,7 +74,7 @@ enum class EmployeePage(@StringRes val titleResId: Int) {
 fun MainRoute(
   modifier: Modifier = Modifier,
   viewModel: MainViewModel = hiltViewModel(),
-  navigateToDetails: () -> Unit
+  navController: NavHostController
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -97,7 +98,9 @@ fun MainRoute(
     onRefresh = {
       viewModel.onEvent(MainEvent.RefreshEmployeeList)
     },
-    onEmployeeClick = { navigateToDetails() }
+    onEmployeeClick = { employee ->
+      navController.navigate("details/${employee.id}")
+    }
   )
 }
 
