@@ -39,6 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.antoan.kodetest.R
 import com.antoan.kodetest.common.presentation.model.UIEmployee
 import com.antoan.kodetest.common.presentation.model.fakeUIEmployeeList
@@ -49,16 +51,7 @@ import com.antoan.kodetest.main.presentation.components.SearchToolbar
 import com.antoan.kodetest.main.presentation.components.SortOrderComponent
 import com.antoan.kodetest.main.presentation.components.YearDivider
 import io.github.frankieshao.refreshlayout.RefreshLayout
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-
-@Composable
-fun EmployeesRoute(
-  modifier: Modifier = Modifier
-) {
-  // TODO
-}
 
 enum class EmployeePage(@StringRes val titleResId: Int) {
   ALL(R.string.all_dep),
@@ -75,6 +68,39 @@ enum class EmployeePage(@StringRes val titleResId: Int) {
   ANALYTICS(R.string.analytics_dep)
 }
 
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+@Composable
+fun MainRoute(
+  modifier: Modifier = Modifier,
+  viewModel: MainViewModel = hiltViewModel(),
+  navigateToDetails: () -> Unit
+) {
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+  MainScreen(
+    uiState = uiState,
+    onError = {
+      viewModel.onEvent(MainEvent.RequestInitialEmployeesList)
+    },
+    onDepartmentChanged = { department ->
+      viewModel.onEvent(MainEvent.DepartmentChanged(department))
+    },
+    onOrderChanged = { order ->
+      viewModel.onEvent(MainEvent.SortOrderChanged(order))
+    },
+    onSearchQueryChanged = { query ->
+      viewModel.onEvent(MainEvent.QueryChanged(query))
+    },
+    onSearchModeChanged = { isActive ->
+      viewModel.onEvent(MainEvent.SearchModeChanged(isActive))
+    },
+    onRefresh = {
+      viewModel.onEvent(MainEvent.RefreshEmployeeList)
+    },
+    onEmployeeClick = { navigateToDetails() }
+  )
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +112,7 @@ fun MainScreen(
   onOrderChanged: (SortParameter) -> Unit,
   onSearchQueryChanged: (String) -> Unit,
   onSearchModeChanged: (Boolean) -> Unit,
+  onEmployeeClick: (UIEmployee) -> Unit,
   onRefresh: () -> Unit,
   onError: () -> Unit
 ) {
@@ -137,7 +164,7 @@ fun MainScreen(
     ) { contentPadding ->
       DepartmentPage(
         state = uiState,
-        onEmployeeClick = {},
+        onEmployeeClick = onEmployeeClick,
         onDepartmentChange = onDepartmentChanged,
         onRefresh = onRefresh,
         pages = pages,
@@ -366,7 +393,8 @@ fun MainScreenPreview() {
       onError = {},
       onSearchQueryChanged = {},
       onSearchModeChanged = {},
-      onRefresh = {}
+      onRefresh = {},
+      onEmployeeClick = {}
     )
   }
 }
