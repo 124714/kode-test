@@ -30,6 +30,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.bouncycastle.util.test.SimpleTest.runTest
+import org.jetbrains.annotations.TestOnly
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -72,6 +73,7 @@ class MainViewModelTest {
       override fun io() = testCoroutineRule.testDispatcher
     }
 
+    // Интеракторы
     getEmployees = GetEmployees(repository)
     requestInitialEmployeeList = RequestInitialEmployeeList(repository, dispatchersProvider)
 
@@ -125,7 +127,7 @@ class MainViewModelTest {
   @Test
   fun mainViewModel_DepartmentChangedEvent_correctUiState() = runTest{
     // Given
-    val expectedEmployeesAfterDepartmentChanged = repository.qaEmployees.map {
+    val expectedEmployeesAfterDepartmentChanged = listOf(employeeQA).map {
       uiEmployeeMapper.mapToView(it)
     }
 
@@ -148,38 +150,12 @@ class MainViewModelTest {
 
 class FakeRepository: EmployeeRepository {
 
-  private val employeeAndroid = Employee(
-    id = "1",
-    avatarUrl = "",
-    firstName = "Анатолий",
-    lastName = "Антонов",
-    userTag = "AA",
-    department = Department.ANDROID,
-    position = "Разработчик",
-    birthday = LocalDate.of(1990, 10, 9),
-    phone = "123-456-789"
-  )
-
-  private val employeeQA = Employee(
-    id = "2",
-    avatarUrl = "",
-    firstName = "Андрей",
-    lastName = "Петров",
-    userTag = "AП",
-    department = Department.QA,
-    position = "Тестировщик",
-    birthday = LocalDate.of(1996, 11, 19),
-    phone = "123-456-789"
-  )
-
   val remoteEmployees = mutableListOf(employeeAndroid, employeeQA)
 
-  val qaEmployees = mutableListOf(employeeQA)
-
-  private val employeesFlow: MutableStateFlow<List<Employee>> = MutableStateFlow(emptyList())
+  private val cachedEmployees: MutableStateFlow<List<Employee>> = MutableStateFlow(emptyList())
 
   override fun getAllEmployees(): Flow<List<Employee>> {
-    return employeesFlow
+    return cachedEmployees
   }
 
   override suspend fun requestEmployees(): List<Employee> {
@@ -187,7 +163,7 @@ class FakeRepository: EmployeeRepository {
   }
 
   override suspend fun storeEmployees(employees: List<Employee>) {
-    employeesFlow.update {
+    cachedEmployees.update {
       employees
     }
   }
@@ -195,4 +171,43 @@ class FakeRepository: EmployeeRepository {
   override fun getEmployeeByDepartment(department: String): Flow<List<Employee>> {
     TODO("Not yet implemented")
   }
+
+  @TestOnly
+  fun addEmployees(employees: List<Employee>) = cachedEmployees.update { it + employees }
 }
+
+private val employeeAndroid = Employee(
+  id = "1",
+  avatarUrl = "",
+  firstName = "Анатолий",
+  lastName = "Антонов",
+  userTag = "AA",
+  department = Department.ANDROID,
+  position = "Разработчик",
+  birthday = LocalDate.of(1990, 10, 9),
+  phone = "123-456-789"
+)
+
+private val employeeQA = Employee(
+  id = "2",
+  avatarUrl = "",
+  firstName = "Андрей",
+  lastName = "Петров",
+  userTag = "AП",
+  department = Department.QA,
+  position = "Тестировщик",
+  birthday = LocalDate.of(1996, 11, 19),
+  phone = "123-456-789"
+)
+
+private val employeeBackend = Employee(
+  id = "3",
+  avatarUrl = "",
+  firstName = "Рихард",
+  lastName = "Курант",
+  userTag = "РП",
+  department = Department.BACKEND,
+  position = "",
+  birthday = LocalDate.of(1888, 1, 8),
+  phone = "123-456-789"
+)

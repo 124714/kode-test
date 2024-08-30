@@ -17,13 +17,28 @@ data class MainUiState(
   val failure: Event<Throwable>? = null,
   val dividerIndex: Int = NOT_DIVIDER_INDEX
 ) {
-  companion object {
-    const val NOT_DIVIDER_INDEX = -1
-  }
 
+  fun updateToNoFailure(): MainUiState {
+    return copy(failure = null)
+  }
   /**
    * Проверка успеха или неудачи при первоначальной загрузке данных (отсутствие сети). Используется для отображения [ErrorScreen]
    */
   val isInitialLoadFailed: Boolean
     get() = failure != null && employees.isEmpty()
+
+  companion object {
+    const val NOT_DIVIDER_INDEX = -1
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun calculateDividerIndex(employees: List<UIEmployee>): Int {
+      if (employees.all { it.birthdayIsNextYear() }) return 0
+      for (index in 0..<employees.lastIndex) {
+        if (employees[index + 1].birthday.month.value - employees[index].birthday.month.value < 0) {
+          return index + 1
+        }
+      }
+      return NOT_DIVIDER_INDEX
+    }
+  }
 }
