@@ -8,19 +8,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun DetailsRoute(
   modifier: Modifier = Modifier,
+  viewModel: DetailsViewModel = hiltViewModel(),
   userId: String?
 ) {
-  Log.d("Details", userId ?: "No userId")
+  val userIdFromVM by viewModel.userId.collectAsStateWithLifecycle()
+
   val context = LocalContext.current
   LaunchedEffect(userId) {
-    Toast.makeText(context, userId, Toast.LENGTH_LONG).show()
+    Toast.makeText(context, userIdFromVM, Toast.LENGTH_LONG).show()
   }
   Box(modifier = modifier
     .fillMaxSize()

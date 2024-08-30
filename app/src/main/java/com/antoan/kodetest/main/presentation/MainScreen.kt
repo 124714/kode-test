@@ -74,7 +74,7 @@ enum class EmployeePage(@StringRes val titleResId: Int) {
 fun MainRoute(
   modifier: Modifier = Modifier,
   viewModel: MainViewModel = hiltViewModel(),
-  navController: NavHostController
+  onNavigateClick: (userId: String) -> Unit
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -98,9 +98,7 @@ fun MainRoute(
     onRefresh = {
       viewModel.onEvent(MainEvent.RefreshEmployeeList)
     },
-    onEmployeeClick = { employee ->
-      navController.navigate("details/${employee.id}")
-    }
+    onEmployeeClick = onNavigateClick
   )
 }
 
@@ -115,7 +113,7 @@ fun MainScreen(
   onOrderChanged: (SortParameter) -> Unit,
   onSearchQueryChanged: (String) -> Unit,
   onSearchModeChanged: (Boolean) -> Unit,
-  onEmployeeClick: (UIEmployee) -> Unit,
+  onEmployeeClick: (String) -> Unit,
   onRefresh: () -> Unit,
   onError: () -> Unit
 ) {
@@ -202,7 +200,7 @@ fun MainScreen(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DepartmentPage(
-  onEmployeeClick: (UIEmployee) -> Unit,
+  onEmployeeClick: (String) -> Unit,
   onDepartmentChange: (department: String) -> Unit,
   onRefresh: () -> Unit,
   state: MainUiState,
@@ -267,7 +265,7 @@ fun DepartmentPage(
 @Composable
 private fun DepartmentPageContent(
   state: MainUiState,
-  onEmployeeClick: (UIEmployee) -> Unit,
+  onEmployeeClick: (String) -> Unit,
   isRefresh: Boolean,
   onRefresh: () -> Unit
 ) {
@@ -293,7 +291,7 @@ private fun DepartmentPageContent(
         EmployeeCard(
           modifier = Modifier
             .then(if (index == 0) Modifier.padding(top = 20.dp) else Modifier)
-            .clickable { onEmployeeClick(employee) },
+            .clickable { onEmployeeClick(employee.id) },
           employee = employee
         )
       }

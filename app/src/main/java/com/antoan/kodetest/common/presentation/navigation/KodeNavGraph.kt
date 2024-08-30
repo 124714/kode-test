@@ -29,13 +29,15 @@ fun KodeNavGraph(
       route = "main"
     ) {
       MainRoute(
-        navController = navController
+        onNavigateClick = { userId ->
+          navController.navigate("details/${userId}")
+        }
       )
     }
 
     composable(
       route = "details/{userId}",
-      arguments = listOf(navArgument("userId") { type = NavType.StringType})
+      arguments = listOf(navArgument("userId") { type = NavType.StringType })
     ) { backStackEntry ->
       DetailsRoute(
         userId = backStackEntry.arguments?.getString("userId")
