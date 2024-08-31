@@ -72,6 +72,9 @@ dependencies {
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
 
+  // Constraint layout
+//  implementation( libs.androidx.constraintlayout)
+
   // PullToRefresh
   implementation("io.github.frankieshao.refreshlayout:refreshlayout:1.0.0")
 

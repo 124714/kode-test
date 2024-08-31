@@ -8,4 +8,5 @@ interface Cache {
   fun getAllEmployees(): Flow<List<CachedEmployee>>
   suspend fun storeEmployees(employees: List<CachedEmployee>)
   fun getEmployeesByDepartment(department: String): Flow<List<CachedEmployee>>
+  suspend fun getEmployee(employeeId: String): CachedEmployee
 }

@@ -33,6 +33,9 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 
+# Constraint
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose" }
+
 # Lifecycle
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose" }

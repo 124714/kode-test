@@ -9,6 +9,7 @@ interface EmployeeRepository {
   suspend fun requestEmployees(): List<Employee>
   suspend fun storeEmployees(employees: List<Employee>)
   fun getEmployeeByDepartment(department: String): Flow<List<Employee>>
+  suspend fun getEmployee(employeeId: String): Employee
   /*fun getEmployeesWithFilter(
     query: String,
     order: SortParameters,

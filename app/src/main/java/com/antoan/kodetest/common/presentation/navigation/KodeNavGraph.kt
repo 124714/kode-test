@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.antoan.kodetest.detail.DetailsRoute
+import com.antoan.kodetest.detail.presentation.DetailsRoute
 import com.antoan.kodetest.main.presentation.MainRoute
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -29,7 +29,7 @@ fun KodeNavGraph(
       route = "main"
     ) {
       MainRoute(
-        onNavigateClick = { userId ->
+        onEmployeeClick = { userId ->
           navController.navigate("details/${userId}")
         }
       )
@@ -38,10 +38,8 @@ fun KodeNavGraph(
     composable(
       route = "details/{userId}",
       arguments = listOf(navArgument("userId") { type = NavType.StringType })
-    ) { backStackEntry ->
-      DetailsRoute(
-        userId = backStackEntry.arguments?.getString("userId")
-      )
+    ) {
+      DetailsRoute()
     }
   }
 }

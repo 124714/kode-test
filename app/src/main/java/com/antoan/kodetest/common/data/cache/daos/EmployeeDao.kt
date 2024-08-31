@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.antoan.kodetest.common.data.cache.model.CachedEmployee
+import com.antoan.kodetest.common.domain.model.Employee
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -18,4 +19,7 @@ abstract class EmployeeDao {
 
   @Query("SELECT * FROM employee WHERE department = :department ORDER BY first_name, last_name DESC")
   abstract fun getEmployeesByDepartment(department: String): Flow<List<CachedEmployee>>
+
+  @Query("SELECT * FROM employee WHERE employee_id = :employeeId")
+  abstract suspend fun getEmployee(employeeId: String): CachedEmployee
 }

@@ -74,7 +74,7 @@ enum class EmployeePage(@StringRes val titleResId: Int) {
 fun MainRoute(
   modifier: Modifier = Modifier,
   viewModel: MainViewModel = hiltViewModel(),
-  onNavigateClick: (userId: String) -> Unit
+  onEmployeeClick: (userId: String) -> Unit
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -98,7 +98,7 @@ fun MainRoute(
     onRefresh = {
       viewModel.onEvent(MainEvent.RefreshEmployeeList)
     },
-    onEmployeeClick = onNavigateClick
+    onEmployeeClick = onEmployeeClick
   )
 }
 

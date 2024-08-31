@@ -24,9 +24,9 @@ import com.antoan.kodetest.temp.SearchScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 class MainActivity : ComponentActivity() {
 
-  @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 

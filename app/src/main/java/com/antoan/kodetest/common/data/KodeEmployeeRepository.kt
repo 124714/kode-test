@@ -34,6 +34,10 @@ class KodeEmployeeRepository @Inject constructor(
       .map { employeeList -> employeeList.map(CachedEmployee::toDomain) }
   }
 
+  override suspend fun getEmployee(employeeId: String): Employee {
+    return cache.getEmployee(employeeId).toDomain()
+  }
+
   override fun getEmployeeByDepartment(department: String): Flow<List<Employee>> {
     return cache
       .getEmployeesByDepartment(department)
