@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.antoan.kodetest.R
-import com.antoan.kodetest.common.presentation.theme.KodeTestTheme
+import com.antoan.kodetest.theme.KodeTestTheme
 
 @Composable
 fun SearchScreen(

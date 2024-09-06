@@ -1,5 +1,7 @@
 [versions]
 agp = "8.5.0"
+converterMoshi = "2.9.0"
+hiltAndroid = "2.51.1"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -10,15 +12,29 @@ activityCompose = "1.9.1"
 composeBom = "2024.04.01"
 koin = "3.5.3"
 coil = "2.7.0"
+loggingInterceptor = "4.12.0"
+mockwebserver = "4.12.0"
+moshi = "1.13.0"
+moshiKotlinCodegen = "1.13.0"
+okhttp = "4.12.0"
+refreshlayout = "1.0.0"
+retrofit = "2.11.0"
 timber = "5.0.1"
 monitor = "1.7.2"
 room = "2.6.1"
+ksp = "1.9.0-1.0.13"
+hilt = "2.51.1"
+androidxHiltNavigationCompose = "1.2.0"
+androidxNavigation = "2.7.7"
+appcompat = "1.7.0"
+material = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -33,6 +49,10 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 
+# Navigation
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
+
 # Constraint
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose" }
 
@@ -43,18 +63,47 @@ androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-c
 # Koin
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
+# DI [Hilt]
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroid" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
+
+
 # Coil
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
+# PullToRefresh
+pulltorefresh = { module = "io.github.frankieshao.refreshlayout:refreshlayout", version.ref = "refreshlayout" }
 
 # Timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
+# Room
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+
+# Network
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+
 # Test
 androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
+mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
+# Для версии kotlin 2.0.0 можно уставить:
+#compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 

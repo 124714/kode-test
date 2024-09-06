@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Введи имя, тег, почту…</string>
+    <string name="description">placeholder</string>
+
+    <string name="all_dep">Все</string>
+    <string name="android_dep">Android</string>
+    <string name="ios_dep">iOS</string>
+    <string name="management_dep">Менеджмент</string>
+    <string name="qa_dep">QA</string>
+    <string name="back_office_dep">Бэк-офис</string>
+    <string name="frontend_dep">Frontend</string>
+    <string name="hr_dep">HR</string>
+    <string name="pr_dep">PR</string>
+    <string name="backend_dep">Backend</string>
+    <string name="support_dep">Техподдержка</string>
+    <string name="analytics_dep">Аналитика</string>
+
+    <string name="error_title">Какой-то сверхразум все сломал</string>
+    <string name="error_subtitle">Постараемся быстро починить</string>
+    <string name="error_button_text">Попробовать снова</string>
+
+    <string name="empty_query_title">Мы никого не нашли</string>
+    <string name="empty_query_subtitle">Попробуй скорректировать запрос</string>
+
+    <string name="alphabetic_order">По алфавиту</string>
+    <string name="birthday_order">По дню рождения</string>
+    <string name="sort_title">Сортировка</string>
+
+    // Pull to refresh
+    <string name="last_updated">Last update %s</string>
+    <string name="pull_to_refresh_pull_label">Pull down…</string>
+    <string name="pull_to_refresh_release_label">Release to refresh!</string>
+    <string name="pull_to_refresh_refreshing_label">Refreshing…</string>
+    <string name="pull_to_refresh_complete_label">Up-to-date!</string>
+    <string name="d_seconds_ago">%d seconds ago</string>
+    <string name="d_minutes_ago">%d minutes ago</string>
+    <string name="d_hours_ago">%1$d hours ago</string>
+</resources>

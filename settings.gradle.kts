@@ -22,3 +22,6 @@ dependencyResolutionManagement {
 rootProject.name = "KodeTest"
 include(":app")
 include(":logging")
+include(":common")
+include(":feature:main")
+include(":feature:detail")

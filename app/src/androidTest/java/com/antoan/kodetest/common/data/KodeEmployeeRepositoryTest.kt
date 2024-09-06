@@ -1,8 +1,6 @@
 package com.antoan.kodetest.common.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.room.Room
-import androidx.test.platform.app.InstrumentationRegistry
 import com.antoan.kodetest.common.data.api.KodeApi
 import com.antoan.kodetest.common.data.api.model.mappers.ApiEmployeeMapper
 import com.antoan.kodetest.common.data.api.utils.FakeServer
@@ -12,13 +10,9 @@ import com.antoan.kodetest.common.data.cache.model.Cache
 import com.antoan.kodetest.common.data.di.CacheModule
 import com.antoan.kodetest.common.domain.repository.EmployeeRepository
 import com.google.common.truth.Truth.assertThat
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest

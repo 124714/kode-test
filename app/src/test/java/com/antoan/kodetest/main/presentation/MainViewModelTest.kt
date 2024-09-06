@@ -1,6 +1,5 @@
 package com.antoan.kodetest.main.presentation
 
-import android.util.Log
 import com.antoan.kodetest.common.domain.model.Department
 import com.antoan.kodetest.common.domain.model.Employee
 import com.antoan.kodetest.common.domain.repository.EmployeeRepository
@@ -9,27 +8,16 @@ import com.antoan.kodetest.common.presentation.model.mappers.UiEmployeeMapper
 import com.antoan.kodetest.common.utils.DispatchersProvider
 import com.antoan.kodetest.main.domain.GetEmployees
 import com.antoan.kodetest.main.domain.RequestInitialEmployeeList
-import com.antoan.kodetest.main.domain.model.SortParameter
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.MainCoroutineDispatcher
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.bouncycastle.util.test.SimpleTest.runTest
 import org.jetbrains.annotations.TestOnly
 import org.junit.Assert.*
 import org.junit.Before
@@ -58,10 +46,10 @@ class MainViewModelTest {
   @get:Rule
   val testCoroutineRule = TestCoroutineRule()
 
-  private lateinit var viewModel: MainViewModel
+  private lateinit var viewModel: com.antoan.kodetest.main.presentation.MainViewModel
   private lateinit var repository: FakeRepository
-  private lateinit var getEmployees: GetEmployees
-  private lateinit var requestInitialEmployeeList: RequestInitialEmployeeList
+  private lateinit var getEmployees: com.antoan.kodetest.main.domain.GetEmployees
+  private lateinit var requestInitialEmployeeList: com.antoan.kodetest.main.domain.RequestInitialEmployeeList
 
   private val uiEmployeeMapper = UiEmployeeMapper()
 
@@ -74,10 +62,11 @@ class MainViewModelTest {
     }
 
     // Интеракторы
-    getEmployees = GetEmployees(repository)
-    requestInitialEmployeeList = RequestInitialEmployeeList(repository, dispatchersProvider)
+    getEmployees = com.antoan.kodetest.main.domain.GetEmployees(repository)
+    requestInitialEmployeeList =
+      com.antoan.kodetest.main.domain.RequestInitialEmployeeList(repository, dispatchersProvider)
 
-    viewModel = MainViewModel(
+    viewModel = com.antoan.kodetest.main.presentation.MainViewModel(
       getEmployees = getEmployees,
       requestInitialEmployeeList = requestInitialEmployeeList,
       uiEmployeeMapper = uiEmployeeMapper
@@ -89,7 +78,7 @@ class MainViewModelTest {
     // Given
     val employeesInitList = emptyList<UIEmployee>()
 
-    val expectedInitialState = MainUiState(
+    val expectedInitialState = com.antoan.kodetest.main.presentation.MainUiState(
       isLoading = false,
       employees = employeesInitList
     )
@@ -110,14 +99,14 @@ class MainViewModelTest {
       uiEmployeeMapper.mapToView(it)
     }
 
-    val expectedUiState = MainUiState(
+    val expectedUiState = com.antoan.kodetest.main.presentation.MainUiState(
       isLoading = false,
       employees = expectedRemoteEmployees,
       failure = null
     )
 
     // When
-    viewModel.onEvent(MainEvent.RequestInitialEmployeesList)
+    viewModel.onEvent(com.antoan.kodetest.main.presentation.MainEvent.RequestInitialEmployeesList)
 
     // Then
     val uiState = viewModel.uiState.value
@@ -131,15 +120,15 @@ class MainViewModelTest {
       uiEmployeeMapper.mapToView(it)
     }
 
-    val expectedUiState = MainUiState(
+    val expectedUiState = com.antoan.kodetest.main.presentation.MainUiState(
       isLoading = false,
       employees = expectedEmployeesAfterDepartmentChanged,
       failure = null
     )
 
     // When
-    viewModel.onEvent(MainEvent.RequestInitialEmployeesList)
-    viewModel.onEvent(MainEvent.DepartmentChanged("QA"))
+    viewModel.onEvent(com.antoan.kodetest.main.presentation.MainEvent.RequestInitialEmployeesList)
+    viewModel.onEvent(com.antoan.kodetest.main.presentation.MainEvent.DepartmentChanged("QA"))
 
     // Then
     val uiState = viewModel.uiState.value
